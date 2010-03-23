@@ -60,7 +60,7 @@
    margin: 0,
    border: 0,
    width: '200px',
-   height: '150px',
+   height: '136px',
    scroll: 'no-scroll',
    overflow: 'hidden'
   });

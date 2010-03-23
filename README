@@ -1,0 +1,41 @@
+FreePass
+========
+
+Per-site unique password using a password generator
+where domain+master-password => unique password for the site
+
+
+
+Desing
+------
+
+Three-stage loading:
+ * minimal bookmarklet
+ * bookmarklet.js.php
+ * index.php
+
+"Secure" iframe communication channel
+
+
+FreePass vs SuperGenPass
+------------------------
+
+- Needs internet connection
++ Not vulnerable to dom tempering
++ Forkable project
+
+Security
+--------
+
+It is possible, like SuperGenPass to detect the addition of FreePass to the page.
+Unlike SuperGenPass, it is not possible for another script to find the password element and read it's value, since it lives in another frame, on another domain.
+
+However, this method, like SuperGenPass suffers from the overlaying capture technique.
+By putting an invisible element on top of the iframe, it is possible to capture keyboard events and guess the password that way.
+
+
+Future ideas
+------------
+
+* Implement an optional storage to remember specific site passwords. (and user login)
+

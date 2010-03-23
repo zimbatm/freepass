@@ -6,6 +6,8 @@
 *
 **/
 
+// TODO: spit array of number ? What if I want to use another character table ?
+
 // CommonJS modularized
 if (typeof exports !== "undefined") exports.SHA1 = SHA1;
  
