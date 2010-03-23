@@ -15,4 +15,3 @@ $base_domain = $base_schema .  $_SERVER['HTTP_HOST'];
 $base_url = $base_domain . dirname($_SERVER['PHP_SELF']);
 
 require('js/bookmarklet.js');
-require('js/sha1.js');

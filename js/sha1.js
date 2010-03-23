@@ -16,6 +16,7 @@ function SHA1 (msg) {
 		return t4;
 	};
  
+ 	// NOTE: not used in code ??
 	function lsb_hex(val) {
 		var str="";
 		var i;

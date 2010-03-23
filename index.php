@@ -1,49 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<style>
-
-body {
-	font-family: sans-serif;
-	font-size: 120%;
-}
-
-body.framed {
-	padding: 5px;
-	margin: 0;
-	font-size: 10pt;
-}
-
-body.framed #masterpw {
-	width: 180px;
-}
-
-body.framed #domain {
-	width: 180px;
-}
-
-body.framed .noframe { display: none; }
-
-#freepass {
-	background-color: #aabbcc;
-	width: 20em;
-}
-
-#freepass label {
-	display: ;
-}
-
-input { 
-	/*border: 1px solid; */
-}
-
-	</style>
+	<link rel="stylesheet" href="freepass.css">
 	<script src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+	<script src="js/sha1.js" type="text/javascript"></script>
 	<script>
-	
-function noFrame() {
-	
-}	
+
+function isFramed() {
+	return window !== window.parent;
+}
 	
 jQuery(function($) {
 	var form = $("form#freepass"),
@@ -54,10 +19,11 @@ jQuery(function($) {
 		got_ev = null;
 	
 	// Detect if framed and set body.framed if true
-	if (window === window.parent) {
-		noFrame();
-	} else {
+	if (isFramed()) {
 		$(document.body).addClass("framed");
+		$(".noframe").hide(); // TODO: fix css instead
+		
+		listenOnce(window, 'message', listenForParent, false);
 	}
 	
 	function listenForParent(ev) {
@@ -70,7 +36,6 @@ jQuery(function($) {
 			height: document.height
 		}), ev.origin);
 	}
-	listenOnce(window, 'message', listenForParent, false);
 	
 	// Helper function
 	function listenOnce(elem, type, callback, capture) {
@@ -82,15 +47,15 @@ jQuery(function($) {
 	}
 	
 	function makePassword() {
-		// Calulcate password
+		// TODO: Calulcate password
 		var pw = masterpw.val() + domain.val();
 		
 		if (got_ev) { // Framed
 			got_ev.source.postMessage(JSON.stringify({password: pw}), got_ev.origin);
-		} else {
+		} //else {
 			// show result
 			result.text(pw);
-		}
+		//}
 	}
 	
 	form.submit(function(ev) {
@@ -125,9 +90,9 @@ jQuery(function($) {
 
 ?>
 	<a id="bookmarklet" href="javascript:(function() {var d=document,db=d.body,s=d.createElement('script');s.src='<?php echo $base_url; ?>/bookmarklet.php';db.appendChild(s);window.setTimeout(function(){db.removeChild(s)},0)})();">FreePass</a>
+	
+	<p>Prior art: <a href="http://supergenpass.com">supergenpass.com</a></p>
 </div>
-
-<p>Prior art: <a href="http://supergenpass.com">supergenpass.com</a></p>
 
 </body>
 </html>

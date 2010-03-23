@@ -1,11 +1,10 @@
-// TODO: remove jQuery dependency
-// TODO: check if there is a page available
 // TODO: when we get the password, fill password fields on double-click
-// TODO: $(box).draggable();
-
+// TODO: give better names to functions, make it more readable
 // NOTE: we're only using W3C methods and old/insecure browser will fail but who cares ?
 (function(global) {
   var home_url = "<?php echo $base_url; ?>"
+  
+  // Check if page is available
   if (!global || !global.document) {
     global.location = home_url;
   }
@@ -13,19 +12,21 @@
   // Don't run twice
   if (document.getElementById("_freepass_")) return;
   
+  // Init dom elements
   var doc = global.document,
     box = doc.createElement("div"),
-    title = doc.createElement("div"),
-    bye = doc.createElement("input"),
-    chan = doc.createElement("iframe"),
-    s;
+      title = doc.createElement("div"),
+        bye = doc.createElement("input"),
+      chan = doc.createElement("iframe"),
+    insertList = [], insertEvent = false,
+    s, currentPassword;
   
   box.id="_freepass_"
   merge(box.style, {
     padding: 0,
     margin: 0,
-    border: '1px solid #EB976A',
-    background: '#D1775F',
+    border: '1px solid #aaaaaa',
+    //background: '#D1775F',
     font: 'normal 10px sans-serif',
     position: 'fixed',
     top: '10px',
@@ -35,44 +36,25 @@
   
   merge(title.style, {
     textAlign: 'right',
-    background: '#732D62',
+    background: '#aabbcc',
     width: '100%',
     font: 'inherit'
   });
-  title.innerHTML = "FreePass&nbsp;";
-  title.onmousedown = function(ev) {
-    var diffX = ev.clientX - box.offsetLeft,
-      diffY = ev.clientY - box.offsetTop;
-    evStop(ev);
+  title.onmousedown = evDrag;
     
-    function follow(ev) {
-      evStop(ev);
-      
-      box.style.left = ev.clientX - diffX + 'px';
-      box.style.top = ev.clientY - diffY + 'px';
-    }
-    evOnce(doc, "mouseup", function(ev) {
-      follow(ev); // Last chance to position
-      doc.removeEventListener("mousemove", follow, false);
-    });
-    doc.addEventListener("mousemove", follow, false);
-  }
-  
   merge(bye.style, {
-    border: 'none',
-    background: '#A14788',
+    border: 0,
+    background: '#99aabb',
     font: 'inherit',
+    float: 'right',
     height: '20px',
-    width: '20px'
+    width: '20px',
+    top: '-10px'
   });
   bye.type = "button";
   bye.value = "x";
-  bye.onclick = function(ev) {
-    evStop(ev);
-    global.removeEventListener("message", gotMessage, false);
-    doc.body.removeChild(box);
-  };
-  
+  bye.onclick = evBye;
+    
   merge(chan.style, {
    padding: 0,
    margin: 0,
@@ -83,10 +65,8 @@
    overflow: 'hidden'
   });
   chan.src = home_url;
-  chan.onload = function(ev) {
-    chan.contentWindow.postMessage("hello", "<?php echo $base_domain ?>");
-  };
-
+  chan.onload = evLoad;
+  
   title.appendChild(bye);
   box.appendChild(title);
   box.appendChild(chan);
@@ -110,25 +90,79 @@
     }
     obj.addEventListener(type, wrap, false);
   }
+  
+  function evDrag(ev) {
+    var diffX = ev.clientX - box.offsetLeft,
+      diffY = ev.clientY - box.offsetTop;
+    evStop(ev);
+    
+    function follow(ev) {
+      evStop(ev);
+      
+      box.style.left = ev.clientX - diffX + 'px';
+      box.style.top = ev.clientY - diffY + 'px';
+    }
+    evOnce(doc, "mouseup", function(ev) {
+      follow(ev); // Last chance to position
+      doc.removeEventListener("mousemove", follow, false);
+    });
+    doc.addEventListener("mousemove", follow, false);
+  }
+  
+  function evBye(ev) {
+    evStop(ev);
+    global.removeEventListener("message", gotMessage, false);
+    if (insertEvent) {
+    	doc.removeEventListener("dblclick", insertPassword, true);
+    	insertedClear();
+    }
+    doc.body.removeChild(box);
+  }
+  
+  function evLoad(ev) {
+    chan.contentWindow.postMessage("hello", "<?php echo $base_domain ?>");
+  }
+  
+  function insertPassword(ev) {
+    var t = ev.target, prevCss;
+  	if (t.nodeName.toLowerCase() === "input" && t.type === "password") {
+  	  if (!insertCheck(t)) {
+  	  	prevCss = t.style.cssText;
+  	  	merge(t.style, {backgroundColor: '#ddffdd'});
+  	  	t.value = currentPassword;
+  	  	insertList.push({elem: t, prevCss: prevCss});
+  	  } 
+  	}
+  }
+  
+  function insertCheck(elem) {
+  	for (var i=0; i<insertList.length; i++) {
+  		if (insertList[i].elem === elem) return true;
+  	}
+  	return false;
+  }
+  
+  function insertedClear() {
+    var obj;
+  	while(obj = insertList.pop()) {
+  		obj.elem.style.cssText = obj.prevCss;
+  	}
+  }
 
   function gotMessage(ev) {
     var obj = JSON.parse(ev.data);
-    console.log(obj);
     
-    /*if (obj.width) {
-      console.log(chan.style.width);
-      chan.style.width = obj.width + 10 + 'px';
-      box.style.width = obj.width + 10 + 'px';
-      console.log(chan.style.width);
-    }
-    
-    if (obj.height) {
-      chan.style.height = obj.height + 'px';
-      box.style.height = obj.height + 'px';
-    }*/
+    // THINK: other data ?
     
     if (obj.password) { // Got password
-      doc.body.innerHTML += "<span>Password is: " + ev.data + "</span>";
+      currentPassword = obj.password;
+      
+      if (!insertEvent) {
+      	doc.addEventListener("dblclick", insertPassword, true);
+      	insertEvent = true;
+      } else {
+      	insertedClear();
+      }
     }
   }
   global.addEventListener("message", gotMessage, false);

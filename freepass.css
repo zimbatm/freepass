@@ -1,0 +1,48 @@
+body {
+	background-color: #fff;
+	color: #444;
+	
+	font-family: Trebuchet MS, Helvetica, Arial, sans-serif;
+	font-size: 62.5%; /* 16px × 62.5% = 10px */
+		
+	//font-size: 1.2em;
+}
+
+body.framed {
+	padding: 0;
+	margin: 0;
+}
+
+// Hide elements not for the frame
+body.framed div.noframe { display: none; }
+
+
+#freepass {
+	background-color: #aabbcc;
+	width: 20em;
+	padding: 1em;
+	
+	font-size: 2em;
+	text-align: justify;
+	line-height: 1.4em;
+}
+
+body.framed #freepass {
+	font-size: 1.2em;
+	width: auto;
+}
+
+#freepass label {
+	display: block;
+}
+
+#freepass input {
+	width: 100%;
+	font-family: Monospace, fixed;
+	font-size: inherit;
+}
+
+#freepass #result {
+	text-align: center;
+}
+
