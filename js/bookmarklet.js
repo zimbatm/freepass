@@ -31,7 +31,8 @@
     position: 'fixed',
     top: '10px',
     right: '10px',
-    width: '200px'
+    width: '200px',
+    zIndex: '1000000'
   });
   
   merge(title.style, {
