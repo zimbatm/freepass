@@ -37,19 +37,19 @@
   
   merge(title.style, {
     textAlign: 'right',
-    background: '#aabbcc',
+    background: '#99aabb',
     width: '100%',
     font: 'inherit'
   });
   title.onmousedown = evDrag;
     
   merge(bye.style, {
+    margin: 0,
+    padding: 0,
     border: 0,
     background: '#99aabb',
     font: 'inherit',
-    float: 'right',
-    height: '20px',
-    width: '20px',
+    borderLeft: '1px solid #aaaaaa',
     top: '-10px'
   });
   bye.type = "button";

@@ -4,7 +4,7 @@ body {
 	
 	font-family: Trebuchet MS, Helvetica, Arial, sans-serif;
 	font-size: 62.5%; /* 16px × 62.5% = 10px */
-		
+	
 	//font-size: 1.2em;
 }
 
@@ -14,13 +14,14 @@ body.framed {
 }
 
 // Hide elements not for the frame
-body.framed div.noframe { display: none; }
+body.framed .noframe { display: none; }
 
 
 #freepass {
 	background-color: #aabbcc;
 	width: 20em;
 	padding: 1em;
+	margin: 0 auto;
 	
 	font-size: 2em;
 	text-align: justify;

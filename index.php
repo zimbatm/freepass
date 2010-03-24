@@ -22,9 +22,9 @@ jQuery(function($) {
 	if (isFramed()) {
 		$(document.body).addClass("framed");
 		$(".noframe").hide(); // TODO: fix css instead
-		
-		listenOnce(window, 'message', listenForParent, false);
 	}
+	
+	listenOnce(window, 'message', listenForParent, false);
 	
 	function listenForParent(ev) {
 		domain.val(ev.origin);
@@ -78,7 +78,7 @@ jQuery(function($) {
 	
 	<input id="generate" type="submit" value="generate">
 	
-	<div id="result"></div>
+	<div id="result">&nbsp;</div>
 </form>
 
 <div class="noframe">
