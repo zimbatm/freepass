@@ -1,3 +1,4 @@
+
 body {
 	background-color: #fff;
 	color: #444;
@@ -5,15 +6,16 @@ body {
 	font-family: Trebuchet MS, Helvetica, Arial, sans-serif;
 	font-size: 62.5%; /* 16px × 62.5% = 10px */
 	
-	//font-size: 1.2em;
+	/* font-size: 1.2em; */
 }
 
 body.framed {
 	padding: 0;
 	margin: 0;
+	background-color: red;
 }
 
-// Hide elements not for the frame
+/* Hide elements not for the frame */
 body.framed .noframe { display: none; }
 
 

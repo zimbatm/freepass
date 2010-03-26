@@ -6,44 +6,49 @@
 	<script src="js/sha1.js" type="text/javascript"></script>
 	<script>
 
+function debug() {
+	if (typeof console === "undefined") {
+		alert(arguments);
+	} else {
+		console.log.apply(console.log, arguments);
+	}
+}
+
 function isFramed() {
+	// or: top !== self
 	return window !== window.parent;
 }
-	
+
 jQuery(function($) {
 	var form = $("form#freepass"),
 		masterpw = $('#masterpw'),
 		domain = $('#domain'),
 		gen = $('#generate'),
 		result = $('#result'),
-		got_ev = null;
-	
+		parent, got_ev;
+		
 	// Detect if framed and set body.framed if true
 	if (isFramed()) {
+		debug("is framed");
 		$(document.body).addClass("framed");
 		$(".noframe").hide(); // TODO: fix css instead
+		// TODO: prevent framing instead
 	}
 	
-	listenOnce(window, 'message', listenForParent, false);
+	if (window.opener) {
+		// We got called from bookmarklet
+		debug("called from bookmarklet", window.opener);
+		//debug(window.opener.location.href); // Not allowed
+		// Handshake to say it is loaded
+		// TO: whomever called me
+		window.opener.postMessage("hello", "*");
+	}
+	
+	window.addEventListener("message", listenForParent, false);
 	
 	function listenForParent(ev) {
 		domain.val(ev.origin);
-		
 		got_ev = ev;
-		
-		ev.source.postMessage(JSON.stringify({
-			width: document.width,
-			height: document.height
-		}), ev.origin);
-	}
-	
-	// Helper function
-	function listenOnce(elem, type, callback, capture) {
-		function wrap() {
-			callback.apply(this, arguments);
-			elem.removeEventListener(type, wrap, capture);
-		}
-		elem.addEventListener(type, wrap, capture);
 	}
 	
 	function makePassword() {
@@ -62,7 +67,7 @@ jQuery(function($) {
 		ev.stopPropagation();
 		try {
 			makePassword();
-		} catch(err) { console.log(err); }
+		} catch(err) { debug(err); }
 		return false;
 	});
 	
@@ -73,7 +78,7 @@ jQuery(function($) {
 <body>
 
 <form id="freepass" onsubmit="return false">
-	<label for="masterpw">Master password</label><input id="masterpw" type="password" autocomplete="off">
+	<label for="masterpw">Master password</label><input id="masterpw" type="password">
 	<label for="domain">Domain</label><input id="domain" value="<?php $_SERVER['HTTP_REFERER'] ?>" autocomplete="off">
 	
 	<input id="generate" type="submit" value="generate">
@@ -83,15 +88,24 @@ jQuery(function($) {
 
 <div class="noframe">
 <?php
-	// Is the user using HTTPS?
-	$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
-	// Complete the URL
-	$base_url .= $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
+	// For bookmarklet.js
+// Is the user using HTTPS?
+$base_schema = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
 
-?>
-	<a id="bookmarklet" href="javascript:(function() {var d=document,db=d.body,s=d.createElement('script');s.src='<?php echo $base_url; ?>/bookmarklet.php';db.appendChild(s);window.setTimeout(function(){db.removeChild(s)},0)})();">FreePass</a>
+// For bookmarklet.js
+$base_domain = $base_schema . $_SERVER['HTTP_HOST'];
+
+// For bookmarklet.js: :Complete the URL
+$base_url = $base_domain . dirname($_SERVER['PHP_SELF']);
 	
-	<p>Prior art: <a href="http://supergenpass.com">supergenpass.com</a></p>
+	ob_start();
+	require('bookmarklet.min.js');
+	$bookmarklet = ob_get_contents();
+	ob_end_clean();
+	
+?>
+
+	Bookmarklet: <a id="bookmarklet" href="javascript:<?php echo htmlentities($bookmarklet); ?>">FreePass</a> (<a href="javascript:(function(){alert('todo')})()">Lite</a>)
 </div>
 
 </body>

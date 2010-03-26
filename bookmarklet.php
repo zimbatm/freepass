@@ -9,9 +9,9 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 $base_schema = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
 
 // For bookmarklet.js
-$base_domain = $base_schema .  $_SERVER['HTTP_HOST'];
+$base_domain = $base_schema . $_SERVER['HTTP_HOST'];
 
 // For bookmarklet.js: :Complete the URL
 $base_url = $base_domain . dirname($_SERVER['PHP_SELF']);
 
-require('js/bookmarklet.js');
+require('bookmarklet.js');
