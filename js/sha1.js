@@ -10,41 +10,27 @@
 
 // CommonJS modularized
 if (typeof exports !== "undefined") exports.SHA1 = SHA1;
- 
-function SHA1 (msg) {
+
+function sha1encode (msg, charTable) {
  
 	function rotate_left(n,s) {
 		var t4 = ( n<<s ) | (n>>>(32-s));
 		return t4;
 	};
- 
- 	// NOTE: not used in code ??
-	function lsb_hex(val) {
-		var str="";
-		var i;
-		var vh;
-		var vl;
- 
-		for( i=0; i<=6; i+=2 ) {
-			vh = (val>>>(i*4+4))&0x0f;
-			vl = (val>>>(i*4))&0x0f;
-			str += vh.toString(16) + vl.toString(16);
+	
+	function char_encode(val) {
+		var str="",
+		  ct = charTable,
+		  len = ct.length,
+		  v = Math.abs(val),
+		  ret;
+		while(v > len) {
+		  ret = v % len;
+		  v = Math.floor(v / len);
+		  str += ct[ret];
 		}
 		return str;
 	};
- 
-	function cvt_hex(val) {
-		var str="";
-		var i;
-		var v;
- 
-		for( i=7; i>=0; i-- ) {
-			v = (val>>>(i*4))&0x0f;
-			str += v.toString(16);
-		}
-		return str;
-	};
- 
  
 	function Utf8Encode(string) {
 		string = string.replace(/\r\n/g,"\n");
@@ -174,8 +160,5 @@ function SHA1 (msg) {
  
 	}
  
-	var temp = cvt_hex(H0) + cvt_hex(H1) + cvt_hex(H2) + cvt_hex(H3) + cvt_hex(H4);
- 
-	return temp.toLowerCase();
- 
+	return char_encode(H0) + char_encode(H1) + char_encode(H2) + char_encode(H3) + char_encode(H4);
 }

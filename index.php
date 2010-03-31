@@ -6,6 +6,15 @@
 	<script src="js/sha1.js" type="text/javascript"></script>
 	<script>
 
+var charTable = [];
+
+// See: http://www.asciitable.com/
+// All printable characters, except space
+// 19-20 characters generated with this table
+for (var i=33; i<127; i++) {
+	charTable.push(String.fromCharCode(i));
+}
+
 function debug() {
 	if (typeof console === "undefined") {
 		alert(arguments);
@@ -51,16 +60,30 @@ jQuery(function($) {
 		got_ev = ev;
 	}
 	
+	// TODO: strip sub-domains
+	function getDomain(str) {
+		md = /([a-z]+:\/\/)([^\/]+)/.exec(str);
+		if (md && md[2]) {
+			return md[2];
+		} else {
+			return str;
+		}
+	}
+	
 	function makePassword() {
-		// TODO: Calulcate password
-		var pw = masterpw.val() + domain.val();
+		var d = getDomain(domain.val());
+		
+		domain.val(d);
+		
+		// Calulcate password
+		var pw = sha1encode(masterpw.val() + d, charTable);
 		
 		if (got_ev) { // Framed
 			got_ev.source.postMessage(JSON.stringify({password: pw}), got_ev.origin);
-		} //else {
-			// show result
-			result.text(pw);
-		//}
+			got_ev.source.focus();
+		} 
+		
+		result.text(pw);
 	}
 	
 	form.submit(function(ev) {
