@@ -9,7 +9,7 @@
 // TODO: spit array of number ? What if I want to use another character table ?
 
 // CommonJS modularized
-if (typeof exports !== "undefined") exports.SHA1 = SHA1;
+if (typeof exports !== "undefined") exports.sha1encode = sha1encode;
 
 function sha1encode (msg, charTable) {
  

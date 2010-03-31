@@ -4,20 +4,12 @@
 	<link rel="stylesheet" href="freepass.css">
 	<script src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
 	<script src="js/sha1.js" type="text/javascript"></script>
+	<script src="freepass.js" type="text/javascript"></script>
 	<script>
-
-var charTable = [];
-
-// See: http://www.asciitable.com/
-// All printable characters, except space
-// 19-20 characters generated with this table
-for (var i=33; i<127; i++) {
-	charTable.push(String.fromCharCode(i));
-}
 
 function debug() {
 	if (typeof console === "undefined") {
-		alert(arguments);
+		alert(arguments[0]);
 	} else {
 		console.log.apply(console.log, arguments);
 	}
@@ -25,25 +17,24 @@ function debug() {
 
 function isFramed() {
 	// or: top !== self
-	return window !== window.parent;
+	if (window !== window.parent);
 }
 
 jQuery(function($) {
-	var form = $("form#freepass"),
+	var fp = window.FreePass,
+		form = $("form#freepass"),
 		masterpw = $('#masterpw'),
 		domain = $('#domain'),
 		gen = $('#generate'),
 		result = $('#result'),
-		parent, got_ev;
+		parent, parent_origin;
 		
-	// Detect if framed and set body.framed if true
+	// Detect if framed, big warning
 	if (isFramed()) {
-		debug("is framed");
 		$(document.body).addClass("framed");
-		$(".noframe").hide(); // TODO: fix css instead
-		// TODO: prevent framing instead
 	}
 	
+	// Detect if openend by client (window.open())
 	if (window.opener) {
 		// We got called from bookmarklet
 		debug("called from bookmarklet", window.opener);
@@ -56,31 +47,25 @@ jQuery(function($) {
 	window.addEventListener("message", listenForParent, false);
 	
 	function listenForParent(ev) {
-		domain.val(ev.origin);
-		got_ev = ev;
-	}
-	
-	// TODO: strip sub-domains
-	function getDomain(str) {
-		md = /([a-z]+:\/\/)([^\/]+)/.exec(str);
-		if (md && md[2]) {
-			return md[2];
-		} else {
-			return str;
+		// Once
+		if (!parent) {
+			domain.val(fp.extractDomain(ev.origin));
+			parent = ev.source;
+			parent_origin = ev.origin;
 		}
 	}
 	
 	function makePassword() {
-		var d = getDomain(domain.val());
+		var d = fp.extractDomain(domain.val());
 		
 		domain.val(d);
 		
 		// Calulcate password
-		var pw = sha1encode(masterpw.val() + d, charTable);
+		var pw = fp.encode(masterpw.val(), d);
 		
-		if (got_ev) { // Framed
-			got_ev.source.postMessage(JSON.stringify({password: pw}), got_ev.origin);
-			got_ev.source.focus();
+		if (parent) { // Framed
+			parent.postMessage(JSON.stringify({password: pw}), parent_origin);
+			parent.focus();
 		} 
 		
 		result.text(pw);
@@ -100,6 +85,8 @@ jQuery(function($) {
 </head>
 <body>
 
+<span id="frame-warning">Your window is framed, security attack !</span>
+
 <form id="freepass" onsubmit="return false">
 	<label for="masterpw">Master password</label><input id="masterpw" type="password">
 	<label for="domain">Domain</label><input id="domain" value="<?php $_SERVER['HTTP_REFERER'] ?>" autocomplete="off">
@@ -109,7 +96,7 @@ jQuery(function($) {
 	<div id="result">&nbsp;</div>
 </form>
 
-<div class="noframe">
+<div id="info">
 <?php
 	// For bookmarklet.js
 // Is the user using HTTPS?
