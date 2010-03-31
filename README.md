@@ -46,6 +46,7 @@ Future ideas
 ------------
 
 * Implement an optional storage to remember specific site passwords. (and user login)
+* Find a better name for the project
 
 Links
 -----
