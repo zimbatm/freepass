@@ -28,7 +28,6 @@ body.framed #frame-warning {
 	margin: 0 auto;
 	
 	font-size: 2em;
-	text-align: justify;
 	line-height: 1.4em;
 }
 
@@ -37,14 +36,14 @@ body.framed #freepass {
 	width: auto;
 }
 
-#freepass label {
-	display: block;
-}
-
 #freepass input {
 	width: 100%;
 	font-family: Monospace, fixed;
 	font-size: inherit;
+}
+
+#freepass #subdomain {
+  width: 2em;
 }
 
 #freepass #result {
@@ -55,4 +54,11 @@ body.framed #freepass {
   width: 40em;
   padding: 1em;
   margin: 0 auto;
+}
+
+#debug {
+  width: 40em;
+  padding: 1em;
+  margin: 0 auto;
+  color: #aaaaaa;
 }

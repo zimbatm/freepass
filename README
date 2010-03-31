@@ -10,12 +10,11 @@ Desing
 ------
 
 Three-stage loading:
- * minimal bookmarklet
+ * minimal bookmarklet (not implemented yet)
  * bookmarklet.js.php
  * index.php
 
-"Secure" iframe communication channel
-
+Secure inter-window communication using the new window.postMessage API.
 
 FreePass vs SuperGenPass
 ------------------------
@@ -28,25 +27,8 @@ Security
 --------
 
 It is possible, like SuperGenPass to detect the addition of FreePass to the page.
-Unlike SuperGenPass, it is not possible for another script to find the password element and read it's value, since it lives in another frame, on another domain (the browser protects it).
+Unlike SuperGenPass, it is not possible for another script to find the password element and read it's value, since it lives in another window, on another domain (the browser protects it).
 
-However, this method, like SuperGenPass suffers from the overlaying capture technique.
-By putting an invisible element on top of the iframe, it is possible to capture keyboard events and guess the password that way.
-
-
-* Vulnerability: overlay keyboard capture
-- Idea: use another window instead of the iframe (with window.open())
-  Firefox return an about:blank Window object.
-  Chrome returns "true"
-  Conclusion: it's not possible to communicate between two windows that way.
-- Idea: keep the iframe as a bridge between the freepass window and the target window. freepass-window <--(localStorage)--> iframe <--(postMessage)--> target-window.
-  TODO
-- Idea: use only stored passwords, so that we don't have to enter anything. If not logged-into the freepass system, the user must go to a new page to login first.
-  TODO
-
-* Vulnerability: iframe replacement technique
-  The attacking website could substitute the iframe with a ressembling element to capture the master-password.
-  
 FreePass mobile semi-vulnerability: by copying the password in the clipboard, it lets other running applications (any flash?) capture a website's password.
 
 Future ideas

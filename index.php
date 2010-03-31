@@ -5,13 +5,17 @@
 	<script src="http://code.jquery.com/jquery-1.4.2.js"></script>
 	<script src="js/sha1.js" type="text/javascript"></script>
 	<script src="freepass.js" type="text/javascript"></script>
+	
+	<script type="text/javascript" src="js/hashmask/jquery.sha1.js"></script>
+	<script type="text/javascript" src="js/hashmask/jquery.sparkline.js"></script>
+	<script type="text/javascript" src="js/hashmask/jquery.hashmask.js"></script>
+	
 	<script>
 
 function debug() {
-	if (typeof console === "undefined") {
-		alert(arguments[0]);
-	} else {
-		console.log.apply(console.log, arguments);
+	var d = $("#debug");
+	for (var i=0; i<arguments.length; i++) {
+		d.append("<div>" + arguments[i] + "</div>");
 	}
 }
 
@@ -23,21 +27,25 @@ function isFramed() {
 jQuery(function($) {
 	var fp = window.FreePass,
 		form = $("form#freepass"),
-		masterpw = $('#masterpw'),
-		domain = $('#domain'),
-		gen = $('#generate'),
-		result = $('#result'),
+		masterpw = $("#masterpw"),
+		domain = $("#domain"),
+		subdomain = $("#subdomain"),
+		gen = $("#generate"),
+		result = $("#result"),
 		parent, parent_origin;
-		
+	
 	// Detect if framed, big warning
 	if (isFramed()) {
 		$(document.body).addClass("framed");
 	}
 	
+	// Apply hashmask plugin
+	masterpw.hashmask();
+	
 	// Detect if openend by client (window.open())
 	if (window.opener) {
 		// We got called from bookmarklet
-		debug("called from bookmarklet", window.opener);
+		debug("called from bookmarklet, notifying parent");
 		//debug(window.opener.location.href); // Not allowed
 		// Handshake to say it is loaded
 		// TO: whomever called me
@@ -49,6 +57,7 @@ jQuery(function($) {
 	function listenForParent(ev) {
 		// Once
 		if (!parent) {
+			debug("parent url is: " + ev.origin);
 			domain.val(fp.extractDomain(ev.origin));
 			parent = ev.source;
 			parent_origin = ev.origin;
@@ -56,7 +65,7 @@ jQuery(function($) {
 	}
 	
 	function makePassword() {
-		var d = fp.extractDomain(domain.val());
+		var d = fp.extractDomain(domain.val(), subdomain.attr("checked"));
 		
 		domain.val(d);
 		
@@ -91,6 +100,9 @@ jQuery(function($) {
 	<label for="masterpw">Master password</label><input id="masterpw" type="password">
 	<label for="domain">Domain</label><input id="domain" value="<?php $_SERVER['HTTP_REFERER'] ?>" autocomplete="off">
 	
+	<input type="checkbox" id="subdomain" checked>
+	<label for="subdomain">strip subdomain</label>
+	
 	<input id="generate" type="submit" value="generate">
 	
 	<div id="result">&nbsp;</div>
@@ -116,6 +128,11 @@ $base_url = $base_domain . dirname($_SERVER['PHP_SELF']);
 ?>
 
 	Bookmarklet: <a id="bookmarklet" href="javascript:<?php echo htmlentities($bookmarklet); ?>">FreePass</a> (<a href="javascript:(function(){alert('todo')})()">Lite</a>)
+</div>
+
+<div id="debug">
+	Debug:
+	
 </div>
 
 </body>

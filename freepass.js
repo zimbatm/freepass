@@ -2,9 +2,8 @@
   var fp = {},
     charTable = [],
     t = true,
-    topDomains = {
-      "uk": {"co": t}
-    };
+    tlds = "co.uk|co.ck",
+    tldsRe = new RegExp("(" + tlds.replace("." ,"\\.") + ")$");
   
   fp.extractDomain = extractDomain;
   fp.encode = encode;
@@ -17,44 +16,56 @@
   	charTable.push(String.fromCharCode(i));
   }
   
-  // TODO: strip sub-domains
-  function extractDomain(str) {
-  	// Remove scheme protocol
-  	var md = /([a-z]+:\/\/)([^\/]+)/.exec(str);
+  // Extract domain from a string
+  // @param string str
+  // @param bool nosubdomain true if you want to strip the subdomain
+  // @return string
+  function extractDomain(str, nosubdomain) {
+    var md;
+    
+    // downcase
+    str = str.toLowerCase();
+    
+    // trim
+    str = str.replace(/^\s+|\s+$/g,"");
+    
+  	// Remove scheme protocol, port and path
+  	md = /^([a-z]+:\/\/)([^\/:]+)/.exec(str)
   	if (md && md[2]) {
   		str = md[2];
+  	} else {
+  	  md = /^([^\/:]+)/.exec(str)
+  	  if (md && md[1]) str = md[1];
   	}
   	
-  	// Remove path
-  	var i = str.indexOf("/")
-  	if (i > -1) {
-  	  str = str.substring(0, i);
-  	}
-  	
-  	// Clean multiple-dots
+  	// Eventually, clean multiple-dots for typos
   	str = str.replace(/\.+/, '.');
   	
-  	/* Remove sub-domain. Here we have two cases. Certainly, we don't want all *.co.uk to have the same password.
-  	This is why we loosely find the "TLD", then the next sub-domain and that's it. */
-  	var arr = str.split('.'), keep = [], td = topDomains, d;
-  	
-  	while((d = arr.pop())) {
-  	  if (td && td.hasOwnProperty(d)) {
-  	    keep.push(d);
-  	    td = td[d];
-  	    if (typeof td !== "object") {
-  	      td = null;
-  	    }
+  	if (nosubdomain) {
+  	  
+  	  // Skip if the loosely-matching ip address is found
+  	  if (/^\d+\.\d+\.\d+\.\d+$/.test(str)) return str;
+  	  // TODO: match IPv6 addresses
+  	  
+  	  var arr = str.split('.'), tld, dom;
+  	  
+  	  md = tldsRe.exec(str);
+  	  if (md && md[1]) {
+  	    tld = md[1];
+  	    arr.pop();
+  	    arr.pop();
   	  } else {
-  	    keep.push(d);
-  	    
-        if (keep.length > 1) {
-  	      break;
-  	    }
+  	    tld = arr.pop();
+  	  }
+  	  
+  	  if (arr.length > 0) {
+  	    str = arr.pop() + '.' + tld;
+  	  } else {
+  	    str = tld;
   	  }
   	}
   	
-  	return keep.reverse().join('.');
+  	return str;
   }
   
   // Public

@@ -1,11 +1,12 @@
-// TODO: when we get the password, fill password fields on double-click
+// TODO: look for password fields in iframes
 // TODO: give better names to functions, make it more readable
 // NOTE: we're only using W3C methods and old/insecure browser will fail but who cares ?
 (function(window) {
   var doc = window.document,
     homeUrl = "<?php echo $base_url; ?>",
     homeDomain = "<?php echo $base_domain; ?>",
-    fid = "fp<?php echo sha1(time()); ?>", 
+    fid = "fp<?php echo sha1(time()); ?>",
+    pwColor = "#ddffdd",
     addEv = "addEventListener", remEv = "removeEventListener",
     insertList = [], insertEvent = false,
     child, childRef, box, msg, bye, currentPassword;
@@ -26,12 +27,14 @@
     padding: 0,
     margin: 0,
     border: "1px solid #aaaaaa",
-    font: "normal 12px sans-serif",
+    font: "normal 12px",
+    fontFamily: "Trebuchet MS, Helvetica, Arial, sans-serif",
     textAlign: "right",
     position: "fixed",
     top: "10px",
-    //right: "10px",
+    left: "10px",
     //width: "200px",
+    color: "#333333",
     background: "#99aabb",
     zIndex: "1000000"
   });
@@ -42,23 +45,24 @@
     marginLeft: "2em",
     marginRight: "2em"
   });
-  show("FreePass");
+  msg.innerHTML = "FreePass";
   
   bye = doc.createElement("input");
   merge(bye.style, {
     margin: 0,
     padding: 0,
     border: 0,
+    color: "inherit",
     background: "inherit",
     font: "inherit",
-    borderLeft: "1px solid #aaaaaa"
+    borderRight: "1px solid #aaaaaa"
   });
   bye.type = "button";
   bye.value = "x";
   bye[addEv]("click", evBye, false);
   
-  box.appendChild(msg);
   box.appendChild(bye);
+  box.appendChild(msg);
   doc.body.appendChild(box);
 
   // Listen for eventual child messages
@@ -80,15 +84,8 @@
   function debug() {
     if (typeof window.console !== "undefined") {
       console.log.apply(console.log, arguments);
-    } else {
-      // TODO: make better than that
-      //alert(arguments);
     }
   }
-  
-  function show(str) {
-    msg.innerHTML = str;
-  }     
 
   function merge(target, src) {
     for(k in src) {
@@ -146,7 +143,7 @@
     if (t.nodeName.toLowerCase() === "input" && t.type === "password") {
       if (!insertCheck(t)) {
         prevCss = t.style.cssText;
-        merge(t.style, {backgroundColor: "#ddffdd"});
+        merge(t.style, {backgroundColor: pwColor});
         t.value = currentPassword;
         insertList.push({elem: t, prevCss: prevCss});
       } 
@@ -173,7 +170,7 @@
     if (ev.origin === homeDomain) {
       if (ev.data === "hello") { // handshake
         ev.source.postMessage("world", ev.origin);
-        show("Waiting for password");
+        debug("Handshake done, waiting for password");
         childRef = ev.source;
         return;
       }
@@ -182,7 +179,8 @@
       
       if (obj.hasOwnProperty("password")) {
         currentPassword = obj["password"];
-        show("Got password: " + currentPassword);
+        debug("Got password", currentPassword);
+        box.style.backgroundColor = pwColor;
         
         if (!insertEvent) {
           doc[addEv]("dblclick", insertPassword, true);
@@ -191,7 +189,7 @@
           insertedClear();
         }
       } else {
-        debug('why ???', obj);
+        debug('why ??? (bug)', obj);
       }
     }
   }
