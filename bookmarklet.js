@@ -8,7 +8,6 @@
     fid = "fp<?php echo sha1(time()); ?>",
     fwid = "fp<?php echo sha1(time()+1); ?>",
     pwColor = "#ddffdd",
-    addEv = "addEventListener", remEv = "removeEventListener",
     insertList = [], insertEvent = false,
     child, childRef, box, msg, bye, currentPassword;
   
@@ -39,7 +38,7 @@
     background: "#99aabb",
     zIndex: "1000000"
   });
-  box[addEv]("mousedown", evDrag, false);
+  box.addEventListener("mousedown", evDrag, false);
   
   msg = doc.createElement("span");
   merge(msg.style, {
@@ -60,14 +59,14 @@
   });
   bye.type = "button";
   bye.value = "x";
-  bye[addEv]("click", evBye, false);
+  bye.addEventListener("click", evBye, false);
   
   box.appendChild(bye);
   box.appendChild(msg);
   doc.body.appendChild(box);
 
   // Listen for eventual child messages
-  window[addEv]("message", gotMessage, false);
+  window.addEventListener("message", gotMessage, false);
 
   // Open freepass window (if possible)
   openChild();
@@ -82,9 +81,9 @@
     child = window.open(homeUrl, fwid);
   }
   
-  function debug() {
+  function debug(a, b, c) {
     if (typeof window.console !== "undefined") {
-      console.log.apply(console.log, arguments);
+      console.log(a, b, c);
     }
   }
 
@@ -102,9 +101,9 @@
   function evOnce(obj, type, fn) {
     function wrap() {
       fn.apply(this, arguments);
-      obj[remEv](type, wrap, false);
+      obj.removeEventListener(type, wrap, false);
     }
-    obj[addEv](type, wrap, false);
+    obj.addEventListener(type, wrap, false);
   }
   
   function evDrag(ev) {
@@ -122,17 +121,17 @@
     }
     evOnce(doc, "mouseup", function(ev) {
       follow(ev); // Last chance to position
-      doc[remEv]("mousemove", follow, false);
+      doc.removeEventListener("mousemove", follow, false);
     });
-    doc[addEv]("mousemove", follow, false);
+    doc.addEventListener("mousemove", follow, false);
   }
   
   function evBye(ev) {
     evStop(ev);
     // Cleanup
-    window[remEv]("message", gotMessage, false);
+    window.removeEventListener("message", gotMessage, false);
     if (insertEvent) {
-      doc[remEv]("dblclick", insertPassword, true);
+      doc.removeEventListener("dblclick", insertPassword, true);
       insertedClear();
     }
     if (child) child.close();
@@ -184,7 +183,7 @@
         box.style.backgroundColor = pwColor;
         
         if (!insertEvent) {
-          doc[addEv]("dblclick", insertPassword, true);
+          doc.addEventListener("dblclick", insertPassword, true);
           insertEvent = true;
         } else {
           insertedClear();
