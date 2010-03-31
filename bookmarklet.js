@@ -6,6 +6,7 @@
     homeUrl = "<?php echo $base_url; ?>",
     homeDomain = "<?php echo $base_domain; ?>",
     fid = "fp<?php echo sha1(time()); ?>",
+    fwid = "fp<?php echo sha1(time()+1); ?>",
     pwColor = "#ddffdd",
     addEv = "addEventListener", remEv = "removeEventListener",
     insertList = [], insertEvent = false,
@@ -78,7 +79,7 @@
   function openChild() {
     if (childRef && (!child || !child.closed)) return;
     childRef = null;
-    child = window.open(homeUrl, fid);
+    child = window.open(homeUrl, fwid);
   }
   
   function debug() {
