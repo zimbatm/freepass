@@ -6,11 +6,10 @@
 *
 **/
 
-// TODO: spit array of number ? What if I want to use another character table ?
-
-// CommonJS modularized
-if (typeof exports !== "undefined") exports.sha1encode = sha1encode;
-
+// Updated function. Outputs a sha1-encoded string with the given character table
+// @param string msg
+// @param array charTable
+// @return string
 function sha1encode (msg, charTable) {
  
 	function rotate_left(n,s) {
