@@ -42,6 +42,13 @@ Unlike SuperGenPass, it is not possible for another script to find the password 
 
 FreePass mobile semi-vulnerability: by copying the password in the clipboard, it lets other running applications (and flash?) capture a website's password.
 
+TODOs
+-----
+
+* Provide more documentation
+* Security checks
+* More user-friendly stuff
+
 Future ideas
 ------------
 

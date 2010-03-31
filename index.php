@@ -2,6 +2,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="freepass.css">
+	<title>FreePass</title>
 	<script src="http://code.jquery.com/jquery-1.4.2.js"></script>
 	<script src="js/sha1.js" type="text/javascript"></script>
 	<script src="freepass.js" type="text/javascript"></script>
