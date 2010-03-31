@@ -1,9 +1,14 @@
 (function(window) {
   var fp = {},
-    charTable = [];
-
-  // CommonJS module
-  if (typeof exports !== "undefined") fp = exports;
+    charTable = [],
+    t = true,
+    topDomains = {
+      "uk": {"co": t}
+    };
+  
+  fp.extractDomain = extractDomain;
+  fp.encode = encode;
+  window.FreePass = fp;
 
   // See: http://www.asciitable.com/
   // All printable characters, except space
@@ -14,20 +19,48 @@
   
   // TODO: strip sub-domains
   function extractDomain(str) {
-  	md = /([a-z]+:\/\/)([^\/]+)/.exec(str);
+  	// Remove scheme protocol
+  	var md = /([a-z]+:\/\/)([^\/]+)/.exec(str);
   	if (md && md[2]) {
-  		return md[2];
-  	} else {
-  		return str;
+  		str = md[2];
   	}
+  	
+  	// Remove path
+  	var i = str.indexOf("/")
+  	if (i > -1) {
+  	  str = str.substring(0, i);
+  	}
+  	
+  	// Clean multiple-dots
+  	str = str.replace(/\.+/, '.');
+  	
+  	/* Remove sub-domain. Here we have two cases. Certainly, we don't want all *.co.uk to have the same password.
+  	This is why we loosely find the "TLD", then the next sub-domain and that's it. */
+  	var arr = str.split('.'), keep = [], td = topDomains, d;
+  	
+  	while((d = arr.pop())) {
+  	  if (td && td.hasOwnProperty(d)) {
+  	    keep.push(d);
+  	    td = td[d];
+  	    if (typeof td !== "object") {
+  	      td = null;
+  	    }
+  	  } else {
+  	    keep.push(d);
+  	    
+        if (keep.length > 1) {
+  	      break;
+  	    }
+  	  }
+  	}
+  	
+  	return keep.reverse().join('.');
   }
-  fp.extractDomain = extractDomain;
   
+  // Public
   function encode(pass, domain) {
     return sha1encode(pass + domain, charTable);
   }
-  fp.encode = encode;
   
-  window.FreePass = fp;
 })(this);
 
