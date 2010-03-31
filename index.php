@@ -44,15 +44,24 @@ jQuery(function($) {
 	
 	// Detect if openend by client (window.open())
 	if (window.opener) {
-		// We got called from bookmarklet
-		debug("called from bookmarklet, notifying parent");
+		
 		//debug(window.opener.location.href); // Not allowed
+		
 		// Handshake to say it is loaded
-		// TO: whomever called me
-		window.opener.postMessage("hello", "*");
+		try {
+			// TO: whomever called me
+			window.opener.postMessage("hello", "*");
+			debug("called from bookmarklet, notifying parent");
+		} catch(err) {
+			debug("Browser doesn't support the postMessage API");
+		}
 	}
 	
-	window.addEventListener("message", listenForParent, false);
+	try {
+		window.addEventListener("message", listenForParent, false);
+	} catch(err) {
+		debug("Browser doesn't support the postMessage API");
+	}
 	
 	function listenForParent(ev) {
 		// Once
@@ -75,7 +84,7 @@ jQuery(function($) {
 		if (parent) { // Framed
 			parent.postMessage(JSON.stringify({password: pw}), parent_origin);
 			parent.focus();
-		} 
+		}
 		
 		result.text(pw);
 	}
