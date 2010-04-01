@@ -50,14 +50,14 @@ Future ideas
 * Make usability testing
 * Provide more doc
 * Make a security audit
-* Add some unit-tests
-* Provide a command-line tool for password generation
+* Add some unit-tests (with nodejs ?)
+* Provide a command-line tool for password generation (with nodejs ?)
 * Publish the password-generation algorithm
 
 Known bugs
 ----------
 
-* Hashpass doesn isn't positioned right on window resize
+* Hashpass isn't positioned right on window resize
 
 Links
 -----
