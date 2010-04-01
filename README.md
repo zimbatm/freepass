@@ -20,7 +20,9 @@ When you click on generate, the password is transmitted to your calling window t
 Installation
 ------------
 
-Get the closure-compiler rubygem and run `rake` to generate the bookmarklet.min.js file. Then put the code in a PHP-enabled website and it should work out of the box. I'm not using fancy PHP features (I think), only some utilities to make my hack easier.
+Just put the files in a public location. No kind of server-side scripting is required.
+
+If you want to develop on the code, you will need `ruby`, `rake` and the `closure-compiler` gem.
 
 Compatiblity
 ------------
@@ -48,7 +50,6 @@ Future ideas
 * Make usability testing
 * Provide more doc
 * Make a security audit
-* Remove PHP dependency
 * Add some unit-tests
 * Provide a command-line tool for password generation
 * Publish the password-generation algorithm
