@@ -23,9 +23,7 @@ body.framed #frame-warning {
 
 #freepass {
 	background-color: #aabbcc;
-	width: 20em;
 	padding: 1em;
-	margin: 0 auto;
 	
 	font-size: 2em;
 	line-height: 1.4em;
@@ -51,14 +49,15 @@ body.framed #freepass {
 }
 
 #info {
-  width: 40em;
   padding: 1em;
-  margin: 0 auto;
 }
 
 #debug {
-  width: 40em;
   padding: 1em;
-  margin: 0 auto;
   color: #aaaaaa;
+}
+
+#content {
+  width: 45em;
+  margin: 0 auto;
 }

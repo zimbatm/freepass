@@ -106,6 +106,7 @@ jQuery(function($) {
 
 <span id="frame-warning">Your window is framed, security attack !</span>
 
+<div id="content">
 <form id="freepass" onsubmit="return false">
 	<label for="masterpw">Master password</label><input id="masterpw" type="password">
 	<label for="domain">Domain</label><input id="domain" value="<?php $_SERVER['HTTP_REFERER'] ?>" autocomplete="off">
@@ -137,12 +138,14 @@ $base_url = $base_domain . dirname($_SERVER['PHP_SELF']);
 	
 ?>
 
-	Bookmarklet: <a id="bookmarklet" href="javascript:<?php echo htmlentities($bookmarklet); ?>">FreePass</a> (<a href="javascript:(function(){alert('todo')})()">Lite</a>)
+	<p>Bookmarklet: <a id="bookmarklet" href="javascript:<?php echo htmlentities($bookmarklet); ?>">FreePass</a> (<a href="javascript:(function(){alert('todo')})()">Lite</a>)</p>
+	
+	<p>Source code: <a href="http://github.com/zimbatm/freepass">http://github.com/zimbatm/freepass</a></a>
 </div>
 
 <div id="debug">
 	Debug:
-	
+</div>
 </div>
 
 </body>
