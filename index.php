@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>FreePass 1.0 (beta)</title>
+	<title>FreePass 1.0 (alpha)</title>
 	
 	<link rel="stylesheet" href="freepass.css">
 	
