@@ -42,6 +42,7 @@ jQuery(function($) {
 	
 	// Apply hashmask plugin
 	masterpw.hashmask();
+	masterpw.focus();
 	
 	// Detect if openend by client (window.open())
 	if (window.opener) {
@@ -64,10 +65,25 @@ jQuery(function($) {
 		debug("Browser doesn't support the postMessage API");
 	}
 	
+	// Use referrer if available
+	if (document.referrer && document.referrer.length > 0) {
+		debug("Got url from referrer: " + document.referrer);
+		domain.val(fp.extractDomain(document.referrer));
+	}
+	
+	// 
+	form.submit(function(ev) {
+		ev.stopPropagation();
+		try {
+			makePassword();
+		} catch(err) { debug(err); }
+		return false;
+	});
+	
 	function listenForParent(ev) {
 		// Once
 		if (!parent) {
-			debug("parent url is: " + ev.origin);
+			debug("Got url from parent window/frame: " + ev.origin);
 			domain.val(fp.extractDomain(ev.origin));
 			parent = ev.source;
 			parent_origin = ev.origin;
@@ -90,15 +106,31 @@ jQuery(function($) {
 		result.text(pw);
 	}
 	
-	form.submit(function(ev) {
-		ev.stopPropagation();
-		try {
-			makePassword();
-		} catch(err) { debug(err); }
-		return false;
+	// Build bookmarklet on demand
+	$("#bookmarklet").one("click", function() {
+		var url = window.location.href,
+			domain = fp.extractDomain(url),
+			fid = "fp" + $.sha1((new Date) + '')
+			fwid = "fp" + $.sha1((new Date) + "xxx");
+			
+		debug("Building bookmarklet with:", url, domain, fid, fwid);
+		
+		$(this).text("Building...");
+		
+		$.get('bookmarklet.min.js', {}, function(data) {
+			var src = data;
+			
+			src = src.replace('${homeUrl}', url);
+			src = src.replace('${homeDomain}', domain);
+			src = src.replace('${fid}', fid);
+			src = src.replace('${fwid}', fwid);
+			
+			$("#bookmarklet").attr("href", 'javascript:' + src);
+			$("#bookmarklet").text("FreePass");
+			
+		}, 'text/plain');
+		
 	});
-	
-	masterpw.focus();
 });
 	</script>
 </head>
@@ -109,7 +141,7 @@ jQuery(function($) {
 <div id="content">
 <form id="freepass" onsubmit="return false">
 	<label for="masterpw">Master password</label><input id="masterpw" type="password">
-	<label for="domain">Domain</label><input id="domain" value="<?php $_SERVER['HTTP_REFERER'] ?>" autocomplete="off">
+	<label for="domain">Domain</label><input id="domain" autocomplete="off">
 	
 	<input type="checkbox" id="subdomain" checked>
 	<label for="subdomain">strip subdomain</label>
@@ -120,25 +152,7 @@ jQuery(function($) {
 </form>
 
 <div id="info">
-<?php
-	// For bookmarklet.js
-// Is the user using HTTPS?
-$base_schema = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
-
-// For bookmarklet.js
-$base_domain = $base_schema . $_SERVER['HTTP_HOST'];
-
-// For bookmarklet.js: :Complete the URL
-$base_url = $base_domain . dirname($_SERVER['PHP_SELF']);
-	
-	ob_start();
-	require('bookmarklet.min.js');
-	$bookmarklet = ob_get_contents();
-	ob_end_clean();
-	
-?>
-
-	<p>Bookmarklet: <a id="bookmarklet" href="javascript:<?php echo htmlentities($bookmarklet); ?>">FreePass</a> (drag it in your bookmark bar)</p>
+	<p>Bookmarklet: <a id="bookmarklet" href="#">Click to generate</a> (then drag it in your bookmark bar)</p>
 	
 	<p>Source code: <a href="http://github.com/zimbatm/freepass">http://github.com/zimbatm/freepass</a></a>
 </div>

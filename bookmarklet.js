@@ -3,10 +3,10 @@
 // NOTE: we're only using W3C methods and old/insecure browser will fail but who cares ?
 (function(window) {
   var doc = window.document,
-    homeUrl = "<?php echo $base_url; ?>",
-    homeDomain = "<?php echo $base_domain; ?>",
-    fid = "fp<?php echo sha1(time()); ?>",
-    fwid = "fp<?php echo sha1(time()+1); ?>",
+    homeUrl = "${homeUrl}",
+    homeDomain = "${homeDomain}",
+    fid = "${fid}",
+    fwid = "${fwid}",
     pwColor = "#ddffdd",
     insertList = [], insertEvent = false,
     child, childRef, box, msg, bye, currentPassword;
