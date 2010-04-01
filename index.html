@@ -120,10 +120,10 @@ jQuery(function($) {
 		$.get('bookmarklet.min.js', {}, function(data) {
 			var src = data;
 			
-			src = src.replace('${homeUrl}', url);
-			src = src.replace('${homeDomain}', domain);
-			src = src.replace('${fid}', fid);
-			src = src.replace('${fwid}', fwid);
+			src = src.replace(/\${homeUrl}/g, url);
+			src = src.replace(/\${homeDomain}/g, domain);
+			src = src.replace(/\${fid}/g, fid);
+			src = src.replace(/\${fwid}/g, fwid);
 			
 			$("#bookmarklet").attr("href", 'javascript:' + src);
 			$("#bookmarklet").text("FreePass");
