@@ -138,7 +138,7 @@ $base_url = $base_domain . dirname($_SERVER['PHP_SELF']);
 	
 ?>
 
-	<p>Bookmarklet: <a id="bookmarklet" href="javascript:<?php echo htmlentities($bookmarklet); ?>">FreePass</a> (<a href="javascript:(function(){alert('todo')})()">Lite</a>)</p>
+	<p>Bookmarklet: <a id="bookmarklet" href="javascript:<?php echo htmlentities($bookmarklet); ?>">FreePass</a> (drag it in your bookmark bar)</p>
 	
 	<p>Source code: <a href="http://github.com/zimbatm/freepass">http://github.com/zimbatm/freepass</a></a>
 </div>
