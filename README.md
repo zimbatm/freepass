@@ -42,18 +42,16 @@ Unlike SuperGenPass, it is not possible for another script to find the password 
 
 FreePass mobile semi-vulnerability: by copying the password in the clipboard, it lets other running applications (and flash?) capture a website's password.
 
-TODOs
------
-
-* Provide more documentation
-* Security checks
-* More user-friendly stuff
-
 Future ideas
 ------------
 
-* Implement an optional storage to remember specific site passwords. (and user login)
-* Find a better name for the project
+* Make usability testing
+* Provide more doc
+* Make a security audit
+* Remove PHP dependency
+* Add some unit-tests
+* Provide a command-line tool for password generation
+* Publish the password-generation algorithm
 
 Links
 -----
