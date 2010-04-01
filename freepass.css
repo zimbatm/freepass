@@ -27,6 +27,10 @@ body.framed #frame-warning {
 	
 	font-size: 2em;
 	line-height: 1.4em;
+
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
 }
 
 body.framed #freepass {
