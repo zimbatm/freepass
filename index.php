@@ -5,7 +5,7 @@
 	
 	<link rel="stylesheet" href="freepass.css">
 	
-	<script src="http://code.jquery.com/jquery-1.4.2.js"></script>
+	<script src="js/jquery-1.4.2.js"></script>
 	<script src="js/jquery.sha1.js"></script>
 	<script src="js/jquery.sparkline.js"></script>
 	<script src="js/jquery.hashmask.js"></script>
