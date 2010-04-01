@@ -53,6 +53,11 @@ Future ideas
 * Provide a command-line tool for password generation
 * Publish the password-generation algorithm
 
+Known bugs
+----------
+
+* Hashpass doesn isn't positioned right on window resize
+
 Links
 -----
 
