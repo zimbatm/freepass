@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="freepass.css">
 	<title>FreePass</title>
-	<script src="http://code.jquery.com/jquery-1.4.2.js"></script>
-	<script src="js/sha1.js" type="text/javascript"></script>
-	<script src="freepass.js" type="text/javascript"></script>
 	
-	<script type="text/javascript" src="js/hashmask/jquery.sha1.js"></script>
-	<script type="text/javascript" src="js/hashmask/jquery.sparkline.js"></script>
-	<script type="text/javascript" src="js/hashmask/jquery.hashmask.js"></script>
+	<link rel="stylesheet" href="freepass.css">
+	
+	<script src="http://code.jquery.com/jquery-1.4.2.js"></script>
+	<script src="js/jquery.sha1.js"></script>
+	<script src="js/jquery.sparkline.js"></script>
+	<script src="js/jquery.hashmask.js"></script>
+	<script src="freepass.js"></script>
 	
 	<script>
 

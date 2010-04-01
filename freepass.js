@@ -1,4 +1,5 @@
-(function(window) {
+// Depends: jquery.sha1.js
+(function(window, $) {
   var fp = {},
     charTable = [],
     t = true,
@@ -11,7 +12,7 @@
 
   // See: http://www.asciitable.com/
   // All printable characters, except space
-  // 19-20 characters generated with this table
+  // 24 characters generated with this table
   for (var i=33; i<127; i++) {
   	charTable.push(String.fromCharCode(i));
   }
@@ -68,10 +69,35 @@
   	return str;
   }
   
-  // Public
-  function encode(pass, domain) {
-    return sha1encode(pass + domain, charTable);
+  function intToCharTable(num, charTable) {
+  	var str="",
+  		ct = charTable,
+  		len = ct.length,
+  		v = Math.abs(num),
+  		ret;
+  	while(v > len) {
+  	  ret = v % len;
+  	  v = Math.floor(v / len);
+  	  str += ct[ret];
+  	}
+  	return str;
   }
   
-})(this);
+  // Public
+  // @param string pass
+  // @param string domain
+  // @param int maxLen in the range of 1-20
+  function encode(pass, domain, maxLen) {
+    var sha1 = $.sha1(pass + domain),
+      num = parseInt(sha1, 16),
+      newPass = intToCharTable(num, charTable);
+      
+    if (!maxLen) maxLen = 10;
+    
+    newPass = newPass.substring(0, maxLen);
+      
+    return newPass;
+  }
+  
+})(this, jQuery);
 
