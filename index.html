@@ -110,10 +110,12 @@ jQuery(function($) {
 	
 	// Build bookmarklet on demand
 	$("#bookmarklet").one("click", function() {
-		var url = window.location.href,
-			domain = fp.extractDomain(url),
+		var l = window.location,
+			domain = l.protocol + '//' + l.hostname,
+			url = domain + l.pathname,
 			fid = "fp" + $.sha1((new Date) + '')
-			fwid = "fp" + $.sha1((new Date) + "xxx");
+			fwid = "fp" + $.sha1((new Date) + "xxx"),
+			$self = $(this);
 			
 		debug("Building bookmarklet with:", url, domain, fid, fwid);
 		
@@ -129,6 +131,10 @@ jQuery(function($) {
 			
 			$("#bookmarklet").attr("href", 'javascript:' + src);
 			$("#bookmarklet").text("FreePass");
+			
+			$self.click(function(ev) {
+				ev.preventDefault();
+			});
 			
 		}, 'text/plain');
 		
