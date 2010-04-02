@@ -11,12 +11,6 @@
     insertList = [], insertEvent = false,
     child, childRef, box, msg, bye, currentPassword;
   
-  // Check if page is available
-  if (!window || !window.document) {
-    window.location = homeUrl;
-    return;
-  }
-  
   // Don't run twice
   if (document.getElementById(fid)) return;
   
@@ -77,14 +71,16 @@
 
   function openChild() {
     if (childRef && (!child || !child.closed)) return;
+    say("Waiting for handshake");
     childRef = null;
     child = window.open(homeUrl, fwid);
   }
   
-  function debug(a, b, c) {
+  function say(txt) {
     if (typeof window.console !== "undefined") {
-      console.log(a, b, c);
+      window.console.log(txt);
     }
+    msg.innerHTML = txt;
   }
 
   function merge(target, src) {
@@ -165,13 +161,11 @@
   }
   
   function gotMessage(ev) {
-    debug("gotev", ev, homeDomain);
-    
     if (ev.origin === homeDomain) {
       if (ev.data === "hello") { // handshake
         ev.source.postMessage("world", ev.origin);
-        debug("Handshake done, waiting for password");
         childRef = ev.source;
+        say("Waiting for password");
         return;
       }
       
@@ -179,7 +173,6 @@
       
       if (obj.hasOwnProperty("password")) {
         currentPassword = obj["password"];
-        debug("Got password", currentPassword);
         box.style.backgroundColor = pwColor;
         
         if (!insertEvent) {
@@ -188,9 +181,13 @@
         } else {
           insertedClear();
         }
+        
+        say("Got password, double-click on field to insert");
       } else {
-        debug('why ??? (bug)', obj);
+        throw new Error("why ??? (bug)", obj);
       }
+    } else {
+      say(ev.origin + "!==" + homeDomain);
     }
   }
 })(this);
