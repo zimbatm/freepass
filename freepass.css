@@ -7,6 +7,11 @@ body {
 	font-size: 62.5%; /* 16px × 62.5% = 10px */
 }
 
+form {
+  margin: 0;
+  padding: 0;
+}
+
 /* Warning ! */
 body.framed {
 	background-color: red;
@@ -19,6 +24,11 @@ body.framed {
 body.framed #frame-warning {
   font-size: 300%;
   display: block;
+}
+
+#content {
+  width: 45em;
+  margin: 0 auto;
 }
 
 #freepass {
@@ -54,16 +64,11 @@ body.framed #freepass {
 	border: none;
 }
 
-#info {
-  padding: 1em;
+#notice {
+  text-align: right;
+  margin-top: 0.5em;
 }
 
 #debug {
-  padding: 1em;
   color: #aaaaaa;
-}
-
-#content {
-  width: 45em;
-  margin: 0 auto;
 }

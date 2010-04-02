@@ -133,6 +133,7 @@ jQuery(function($) {
 		}, 'text/plain');
 		
 	});
+	
 });
 	</script>
 </head>
@@ -141,25 +142,40 @@ jQuery(function($) {
 <span id="frame-warning">Your window is framed, security attack !</span>
 
 <div id="content">
-<form id="freepass" onsubmit="return false">
-	<label for="masterpw">Master password</label><input id="masterpw" type="password">
-	<label for="domain">Domain</label><input id="domain" autocomplete="off">
+	
+<div id="main">
+	<h3>FreePass</h3>
+	<form id="freepass" onsubmit="return false">
+	
+		<label for="masterpw">Master password</label><input id="masterpw" type="password">
+		<label for="domain">Domain</label><input id="domain" autocomplete="off">
+	
+		<input id="generate" type="submit" value="generate">
+	
+		<input id="result" autocomplete="off">
+	</form>
+	
+	<p id="notice">Code by <a href="http://jonas.pfenniger.name">Jonas Pfenniger (zimbatm)</a> and <a href="http://github.com/zimbatm/freepass/blob/master/LICENCE">others</a></p>
+	
+</div>
+
+<div id="setup">
+	<h3>Setup</h3>
 	
 	<input type="checkbox" id="subdomain" checked>
 	<label for="subdomain">strip subdomain</label>
 	
-	<input id="generate" type="submit" value="generate">
-	
-	<input id="result">
-</form>
-
-<div id="info">
 	<p>Bookmarklet: <a id="bookmarklet" href="#">Click to generate</a> (then drag it in your bookmark bar)</p>
+</div>
+
+<div id="about">
+	<h3>About</h3>
 	
 	<p>Source code: <a href="http://github.com/zimbatm/freepass">http://github.com/zimbatm/freepass</a></a>
 </div>
 
 <div id="debug">
+	<h3>Debug</h3>
 	Debug:
 </div>
 </div>
