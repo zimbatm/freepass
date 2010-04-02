@@ -103,8 +103,10 @@ jQuery(function($) {
 			parent.focus();
 		}
 		
-		result.text(pw);
+		result.val(pw);
 	}
+	
+	result.click(function() { this.select(); });
 	
 	// Build bookmarklet on demand
 	$("#bookmarklet").one("click", function() {
@@ -148,7 +150,7 @@ jQuery(function($) {
 	
 	<input id="generate" type="submit" value="generate">
 	
-	<div id="result">&nbsp;</div>
+	<input id="result">
 </form>
 
 <div id="info">

@@ -50,6 +50,8 @@ body.framed #freepass {
 
 #freepass #result {
 	text-align: center;
+	background: inherit;
+	border: none;
 }
 
 #info {
