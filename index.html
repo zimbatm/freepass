@@ -32,6 +32,7 @@ jQuery(function($) {
 		masterpw = $("#masterpw"),
 		domain = $("#domain"),
 		subdomain = $("#subdomain"),
+		autoclose = $("#autoclose"),
 		gen = $("#generate"),
 		result = $("#result"),
 		parent, parent_origin;
@@ -101,7 +102,11 @@ jQuery(function($) {
 		
 		if (parent) { // Framed
 			parent.postMessage(JSON.stringify({password: pw}), parent_origin);
-			parent.focus();
+			if (autoclose.attr("checked")) {
+				window.close();
+			} else {
+				parent.focus();
+			}
 		}
 		
 		result.val(pw);
@@ -110,14 +115,16 @@ jQuery(function($) {
 	result.dblclick(function() { this.select(); });
 	
 	// Build bookmarklet on demand
-	$("#bookmarklet").one("click", function() {
+	$("#bookmarklet").one("click", function(ev) {
 		var l = window.location,
 			domain = l.protocol + '//' + l.hostname,
 			url = domain + l.pathname,
 			fid = "fp" + $.sha1((new Date) + '')
 			fwid = "fp" + $.sha1((new Date) + "xxx"),
 			$self = $(this);
-			
+		
+		ev.preventDefault();
+		
 		debug("Building bookmarklet with:", url, domain, fid, fwid);
 		
 		$(this).text("Building...");
@@ -168,6 +175,9 @@ jQuery(function($) {
 	
 	<input type="checkbox" id="subdomain" checked>
 	<label for="subdomain">strip subdomain</label>
+	
+	<input type="checkbox" id="autoclose" checked>
+	<label for="autoclose">close the window if called by bookmarklet</label>
 	
 	<p>Bookmarklet: <a id="bookmarklet" href="#">Click to generate</a> (then drag it in your bookmark bar)</p>
 </div>
