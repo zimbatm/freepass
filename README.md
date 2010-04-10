@@ -39,8 +39,7 @@ FreePass vs SuperGenPass [1]
 Security
 --------
 
-It is possible, like SuperGenPass to detect the addition of FreePass to the page.
-Unlike SuperGenPass, it is not possible for another script to find the password element and read it's value, since it lives in another window, on another domain (the browser should! protect it).
+Brute-force: since the salt is known for a given site, it is easier for the attacker to find your password by brute-force in a targetted attack.
 
 FreePass mobile semi-vulnerability: by copying the password in the clipboard, it lets other running applications (and flash?) capture a website's password.
 
@@ -53,11 +52,6 @@ Future ideas
 * Add some unit-tests (with nodejs ?)
 * Provide a command-line tool for password generation (with nodejs ?)
 * Publish the password-generation algorithm
-
-Known bugs
-----------
-
-* Hashpass isn't positioned right on window resize
 
 Links
 -----
