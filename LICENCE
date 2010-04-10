@@ -3,7 +3,8 @@ this project is release in the public domain.
 
 List of external parts:
 
-- js/jquery-1.4.2.js : Copyright 2010, John Resig, Dual licensed under the MIT or GPL Version 2 licenses.
-- js/jquery.hashmask.js : Copyright (c) 2009 {@link http://arc90.com Arc90 Inc.}, BSD
+- js/jquery-1.4.2.js : (c) 2010, John Resig, Dual licensed under the MIT or GPL Version 2 licenses.
+- js/jquery.hashmask.js : (c) 2009 Arc90 Inc., BSD
 - js/jquery.sha1.js : GPL
 - js/jquery.sparkline.js : (c) Splunk, Inc, BSD
+- js/biginteger.js : (c) 2009 Matthew Crumley, MIT
