@@ -2,18 +2,28 @@
 (function(window, $) {
   var fp = {},
     charTable = [],
-    t = true,
     tlds = "co.uk|co.ck",
     tldsRe = new RegExp("(" + tlds.replace("." ,"\\.") + ")$");
   
+  fp.charTable = charTable;
   fp.extractDomain = extractDomain;
   fp.encode = encode;
   window.FreePass = fp;
 
   // See: http://www.asciitable.com/
-  // All printable characters, except space
-  // 24 characters generated with this table
-  for (var i=33; i<127; i++) {
+  /*for (var i=48; i<=57; i++) { // 0-9
+  	charTable.push(String.fromCharCode(i));
+  }
+  for (var i=65; i<=90; i++) { // A-Z
+  	charTable.push(String.fromCharCode(i));
+  }
+  for (var i=97; i<=122; i++) { // a-z
+  	charTable.push(String.fromCharCode(i));
+  }
+  charTable.push.apply(charTable, "./-".split(""));*/
+  
+  // All printable characters
+  for (var i=33; i<=126; i++) {
   	charTable.push(String.fromCharCode(i));
   }
   
@@ -69,17 +79,18 @@
   	return str;
   }
   
-  function intToCharTable(num, charTable) {
+  function hexToCharTable(hex, charTable) {
   	var str="",
   		ct = charTable,
-  		len = ct.length,
-  		v = Math.abs(num),
-  		ret;
-  	while(v > len) {
-  	  ret = v % len;
-  	  v = Math.floor(v / len);
-  	  str += ct[ret];
+  		base = ct.length,
+  		num = BigInteger.parse(hex, 16);
+  	
+  	while(!num.isZero()) {
+  	  var divmod = num.divRem(base);
+  	  num = divmod[0];
+  	  str = ct[divmod[1]] + str; // right-to-left
   	}
+  	
   	return str;
   }
   
@@ -87,10 +98,10 @@
   // @param string pass
   // @param string domain
   // @param int maxLen in the range of 1-20
+  // @return string
   function encode(pass, domain, maxLen) {
     var sha1 = $.sha1(pass + domain),
-      num = parseInt(sha1, 16),
-      newPass = intToCharTable(num, charTable);
+      newPass = hexToCharTable(sha1, charTable);
       
     if (!maxLen) maxLen = 10;
     
