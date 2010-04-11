@@ -119,13 +119,11 @@ jQuery(function($) {
 		var l = window.location,
 			domain = l.protocol + '//' + l.hostname,
 			url = domain + l.pathname,
-			fid = "fp" + $.sha1((new Date) + '')
-			fwid = "fp" + $.sha1((new Date) + "xxx"),
 			$self = $(this);
 		
 		ev.preventDefault();
 		
-		debug("Building bookmarklet with:", url, domain, fid, fwid);
+		debug("Building bookmarklet with:", url, domain);
 		
 		$(this).text("Building...");
 		
@@ -134,8 +132,6 @@ jQuery(function($) {
 			
 			src = src.replace(/\${homeUrl}/g, url);
 			src = src.replace(/\${homeDomain}/g, domain);
-			src = src.replace(/\${fid}/g, fid);
-			src = src.replace(/\${fwid}/g, fwid);
 			
 			$("#bookmarklet").attr("href", 'javascript:' + src);
 			$("#bookmarklet").text("FreePass");
@@ -161,8 +157,8 @@ jQuery(function($) {
 	<h3>FreePass 1.0 (alpha)</h3>
 	<form id="freepass" onsubmit="return false">
 	
-		<label for="masterpw">Master password</label><input id="masterpw" type="password">
-		<label for="domain">Domain</label><input id="domain" autocomplete="off">
+		<label for="masterpw">Master password</label><input id="masterpw" type="password" autofocus>
+		<label for="domain">Domain</label><input id="domain" type="password" autocomplete="off">
 	
 		<input id="generate" type="submit" value="generate">
 	

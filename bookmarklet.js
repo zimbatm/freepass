@@ -5,8 +5,7 @@
   var doc = window.document,
     homeUrl = "${homeUrl}",
     homeDomain = "${homeDomain}",
-    fid = "${fid}",
-    fwid = "${fwid}",
+    fid = "freepass",
     pwColor = "#ddffdd",
     insertList = [], insertEvent = false,
     child, childRef, box, msg, bye, currentPassword;
@@ -73,7 +72,7 @@
     if (childRef && (!child || !child.closed)) return;
     say("Waiting for handshake");
     childRef = null;
-    child = window.open(homeUrl, fwid);
+    child = window.open(homeUrl);
   }
   
   function say(txt) {
