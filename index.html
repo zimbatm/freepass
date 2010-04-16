@@ -36,6 +36,7 @@ jQuery(function($) {
 		autoclose = $("#autoclose"),
 		gen = $("#generate"),
 		result = $("#result"),
+		shiftDown = false,
 		parent, parent_origin;
 	
 	// Detect if framed, big warning
@@ -74,10 +75,24 @@ jQuery(function($) {
 		updateDomain(document.referrer);
 	}
 	
+	
+	$(document).keydown(function (ev) {
+		if (ev.which === 16) {
+			shiftDown = true;
+		}
+	});
+	
+	$(document).keyup(function (ev) {
+		if (ev.which === 16) {
+			shiftDown = false;
+		}
+	});
+	
 	// 
 	form.submit(function(ev) {
 		ev.stopPropagation();
 		try {
+			updateDomain();
 			makePassword();
 		} catch(err) { debug(err); }
 		return false;
@@ -120,6 +135,7 @@ jQuery(function($) {
 		if (!parent) {
 			debug("Got url from parent window/frame: " + ev.origin);
 			updateDomain(ev.origin);
+			autoclose.attr("checked", true);
 			parent = ev.source;
 			parent_origin = ev.origin;
 		}
@@ -131,14 +147,14 @@ jQuery(function($) {
 		
 		if (parent) { // Framed
 			parent.postMessage(JSON.stringify({password: pw}), parent_origin);
-			if (autoclose.attr("checked")) {
-				window.close();
-			} else {
-				parent.focus();
-			}
 		}
 		
-		result.val(pw);
+		if (autoclose.attr("checked") && !shiftDown) {
+			window.close();
+		} else {
+			if (parent) parent.focus();
+			result.val(pw);
+		}
 	}
 	
 	result.dblclick(function() { this.select(); });
@@ -203,8 +219,8 @@ jQuery(function($) {
 	
 	
 	
-	<input type="checkbox" id="autoclose" checked>
-	<label for="autoclose">close the window if called by bookmarklet</label>
+	<input type="checkbox" id="autoclose">
+	<label for="autoclose">close on submit (unless SHIFT key is pressed)</label>
 	
 	<p>Bookmarklet: <a id="bookmarklet" href="#">Click to generate</a> (then drag it in your bookmark bar)</p>
 </div>
