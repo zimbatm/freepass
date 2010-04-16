@@ -32,6 +32,7 @@ jQuery(function($) {
 		masterpw = $("#masterpw"),
 		domain = $("#domain"),
 		subdomain = $("#subdomain"),
+		subdomainLabel = $("label[for=subdomain]"),
 		autoclose = $("#autoclose"),
 		gen = $("#generate"),
 		result = $("#result"),
@@ -70,7 +71,7 @@ jQuery(function($) {
 	// Use referrer if available
 	if (document.referrer && document.referrer.length > 0) {
 		debug("Got url from referrer: " + document.referrer);
-		domain.val(fp.extractDomain(document.referrer));
+		updateDomain(document.referrer);
 	}
 	
 	// 
@@ -82,23 +83,51 @@ jQuery(function($) {
 		return false;
 	});
 	
+	function updateDomain(val) {
+		if (subdomain.attr("checked")) {
+			if (!val) val = domain.val();
+			if (val !== "") {
+				var short = fp.extractDomain(val, true);
+				if (val !== short) subdomainLabel.text( val );
+				domain.val(short);
+			}
+		} else if (val) {
+			domain.val(val);
+		}
+	};
+	domain.change(function() {
+		updateDomain();
+	});
+	
+	subdomain.change(function () {
+		var $this = $(this);
+		if ($this.attr("checked")) {
+			updateDomain();
+		} else {
+			// Restore
+			var oldText = $.data(subdomainLabel, "old-text"),
+				oldDomain = subdomainLabel.text();
+				
+			if (oldText !== oldDomain) domain.val( oldDomain );
+			
+			subdomainLabel.text( oldText );
+		}
+	});
+	$.data(subdomainLabel, "old-text", subdomainLabel.text());
+	
 	function listenForParent(ev) {
 		// Once
 		if (!parent) {
 			debug("Got url from parent window/frame: " + ev.origin);
-			domain.val(fp.extractDomain(ev.origin));
+			updateDomain(ev.origin);
 			parent = ev.source;
 			parent_origin = ev.origin;
 		}
 	}
 	
 	function makePassword() {
-		var d = fp.extractDomain(domain.val(), subdomain.attr("checked"));
-		
-		domain.val(d);
-		
-		// Calulcate password
-		var pw = fp.encode(masterpw.val(), d);
+		var d = domain.val(),
+			pw = fp.encode(masterpw.val(), d);
 		
 		if (parent) { // Framed
 			parent.postMessage(JSON.stringify({password: pw}), parent_origin);
@@ -159,6 +188,9 @@ jQuery(function($) {
 	
 		<label for="masterpw">Master password</label><input id="masterpw" type="password" autofocus>
 		<label for="domain">Domain</label><input id="domain" type="url" autocomplete="off">
+		
+		<input type="checkbox" id="subdomain" checked>
+		<label for="subdomain" id="subdomain-label">strip subdomain</label>
 	
 		<input id="generate" type="submit" value="generate">
 	
@@ -169,8 +201,7 @@ jQuery(function($) {
 <div id="setup">
 	<h3>Setup</h3>
 	
-	<input type="checkbox" id="subdomain" checked>
-	<label for="subdomain">strip subdomain</label>
+	
 	
 	<input type="checkbox" id="autoclose" checked>
 	<label for="autoclose">close the window if called by bookmarklet</label>

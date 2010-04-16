@@ -55,7 +55,11 @@ body.framed #freepass {
 }
 
 #freepass #subdomain {
-  width: 2em;
+  width: auto;
+}
+
+label[for=subdomain] {
+  font-size: 0.7em;
 }
 
 #freepass #result {
