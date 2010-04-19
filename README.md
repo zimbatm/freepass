@@ -46,6 +46,7 @@ FreePass mobile semi-vulnerability: by copying the password in the clipboard, it
 Future ideas
 ------------
 
+* Add offline access
 * Check bookmarklet version on site (and propose upgrade if necessary)
 * Make usability testing
 * Provide more doc
