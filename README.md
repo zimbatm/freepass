@@ -22,6 +22,12 @@ Installation
 
 Just put the files in a public location. No kind of server-side scripting is required.
 
+If you want to use the offline mode, you will have to serve the "index.manifest" with a "text/cache-manifest" content-type. For example in apache2, you can set an entry like this:
+
+    <IfModule mod_mime.c>
+       AddType text/cache-manifest .manifest
+    </IfModule>
+
 If you want to develop on the code, you will need `ruby`, `rake` and the `closure-compiler` gem.
 
 Compatiblity
@@ -46,7 +52,6 @@ FreePass mobile semi-vulnerability: by copying the password in the clipboard, it
 Future ideas
 ------------
 
-* Add offline access
 * Check bookmarklet version on site (and propose upgrade if necessary)
 * Make usability testing
 * Provide more doc
