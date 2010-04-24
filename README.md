@@ -22,13 +22,30 @@ Installation
 
 Just put the files in a public location. No kind of server-side scripting is required.
 
-If you want to use the offline mode, you will have to serve the "index.manifest" with a "text/cache-manifest" content-type. For example in apache2, you can set an entry like this:
+See "Offline mode" section if you want FreePass to be available when not connected on the web.
+
+If you want to develop on the code, you will need `ruby`, `rake` and the `closure-compiler` gem.
+
+Offline mode
+------------
+
+It is possible to use FreePass when not connected on the web. Using the new HTML5 offline mode, some modern browser will keep a copy of the FreePass website.
+
+To make it work, make sure your browser supports that feature, and configure your webserver to serve the "index.manifest" file with "text/cache-manifest" content-type.
+
+Apache2 configuration:
 
     <IfModule mod_mime.c>
        AddType text/cache-manifest .manifest
     </IfModule>
 
-If you want to develop on the code, you will need `ruby`, `rake` and the `closure-compiler` gem.
+
+Compatiblity list:
+  - Chrome 5.0.342.9 beta (Mac)
+  - Firefox 3.6 (Mac)
+  
+Uncompatiblity list:
+  - Safari 4.0.5 (Mac)
 
 Compatiblity
 ------------
