@@ -3,6 +3,7 @@ index.html
 bookmarklet.min.js
 freepass.css
 freepass.js
+freepass-gui.js
 js/biginteger.js
 js/jquery-1.4.2.js
 js/jquery.hashmask.js

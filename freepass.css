@@ -13,25 +13,43 @@ form {
 }
 
 /* Warning ! */
-body.framed {
+body.frame-alert {
 	background-color: red;
+	padding: 5em;
 }
 
 #frame-warning {
-  display: none;
+	display: none;
+	text-align: center;
 }
 
-body.framed #frame-warning {
+body.frame-alert #frame-warning {
   font-size: 300%;
   display: block;
 }
 
+body.frame-alert #content {
+	display: none;
+	visibility: hidden;
+}
+
 #content {
-  width: 45em;
-  margin: 0 auto;
+	width: 45em;
+	margin: 0 auto;
+	font-size: 1.2em;
+}
+
+#logo {
+	font-size: 1.5em;
+	margin: 1em 0;
+}
+
+#logo #slogan {
+	font-size: 90%;
 }
 
 #freepass {
+	position: relative;
 	background-color: #aabbcc;
 	padding: 1em;
 	
@@ -41,11 +59,6 @@ body.framed #frame-warning {
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-}
-
-body.framed #freepass {
-	font-size: 1.2em;
-	width: auto;
 }
 
 #freepass input {
@@ -59,7 +72,7 @@ body.framed #freepass {
 }
 
 label[for=subdomain] {
-  font-size: 0.7em;
+  font-size: 70%;
 }
 
 #freepass #result {
@@ -69,5 +82,65 @@ label[for=subdomain] {
 }
 
 #debug {
-  color: #aaaaaa;
+  color: #aaa;
 }
+
+#mode-select {
+	font-size: 120%;
+	padding-left: 2em;
+}
+
+#mode-select a {
+	text-decoration: none;
+	color: #000;
+	padding: 0.2em 1em 0 1em;
+	
+	margin-right: 0.5em;
+	
+	border-top-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	
+	border-top-right-radius: 5px;
+	-moz-border-radius-topright: 5px;
+	-webkit-border-top-right-radius: 5px;
+
+}
+
+#mode-select a:hover {
+	color: #fff;
+}
+
+#standalone-button {
+	background-color: #abc;
+}
+
+#connected-button {
+	background-color: #cba;
+}
+
+.standalone, .connected, .connected-help {
+	display: none;
+}
+
+#content.standalone-mode .standalone {
+	display: block;
+}
+
+#content.connected-mode .connected {
+	display: block;
+}
+
+#content.connected-help-mode .connected-help {
+	display: block;
+}
+
+#content.standalone-mode #freepass {
+	background-color: #abc;
+}
+
+#content.connected-mode #freepass, #content.connected-help-mode #freepass {
+	background-color: #cba;
+}
+
+

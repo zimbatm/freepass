@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html manifest="index.manifest">
 <head>
-	<title>FreePass 1.0 (beta)</title>
+	<title>FreePass v1.1 - one password for all your sites</title>
 	
 	<link rel="stylesheet" href="freepass.css">
 	
@@ -12,218 +12,50 @@
 	<script src="js/biginteger.js"></script>
 	<script src="freepass.js"></script>
 	
-	<script>
-
-function debug() {
-	var d = $("#debug");
-	for (var i=0; i<arguments.length; i++) {
-		d.append("<div>" + arguments[i] + "</div>");
-	}
-}
-
-function isFramed() {
-	// or: top !== self
-	if (window !== window.parent);
-}
-
-jQuery(function($) {
-	var fp = window.FreePass,
-		form = $("form#freepass"),
-		masterpw = $("#masterpw"),
-		domain = $("#domain"),
-		subdomain = $("#subdomain"),
-		subdomainLabel = $("label[for=subdomain]"),
-		autoclose = $("#autoclose"),
-		gen = $("#generate"),
-		result = $("#result"),
-		shiftDown = false,
-		parent, parent_origin;
-	
-	// Detect if framed, big warning
-	if (isFramed()) {
-		$(document.body).addClass("framed");
-	}
-	
-	// Apply hashmask plugin
-	masterpw.hashmask();
-	masterpw.focus();
-	
-	// Detect if openend by client (window.open())
-	if (window.opener) {
-		
-		//debug(window.opener.location.href); // Not allowed
-		
-		// Handshake to say it is loaded
-		try {
-			// TO: whomever called me
-			window.opener.postMessage("hello", "*");
-			debug("called from bookmarklet, notifying parent");
-		} catch(err) {
-			debug("Browser doesn't support the postMessage API");
-		}
-	}
-	
-	try {
-		window.addEventListener("message", listenForParent, false);
-	} catch(err) {
-		debug("Browser doesn't support the postMessage API");
-	}
-	
-	// Use referrer if available
-	if (document.referrer && document.referrer.length > 0) {
-		debug("Got url from referrer: " + document.referrer);
-		updateDomain(document.referrer);
-	}
-	
-	
-	$(document).keydown(function (ev) {
-		if (ev.which === 16) {
-			shiftDown = true;
-		}
-	});
-	
-	$(document).keyup(function (ev) {
-		if (ev.which === 16) {
-			shiftDown = false;
-		}
-	});
-	
-	// 
-	form.submit(function(ev) {
-		ev.stopPropagation();
-		try {
-			updateDomain();
-			makePassword();
-		} catch(err) { debug(err); }
-		return false;
-	});
-	
-	function updateDomain(val) {
-		if (subdomain.attr("checked")) {
-			if (!val) val = domain.val();
-			if (val !== "") {
-				var short = fp.extractDomain(val, true);
-				if (val !== short) subdomainLabel.text( val );
-				domain.val(short);
-			}
-		} else if (val) {
-			domain.val(val);
-		}
-	};
-	domain.change(function() {
-		updateDomain();
-	});
-	
-	subdomain.change(function () {
-		var $this = $(this);
-		if ($this.attr("checked")) {
-			updateDomain();
-		} else {
-			// Restore
-			var oldText = $.data(subdomainLabel, "old-text"),
-				oldDomain = subdomainLabel.text();
-				
-			if (oldText !== oldDomain) domain.val( oldDomain );
-			
-			subdomainLabel.text( oldText );
-		}
-	});
-	$.data(subdomainLabel, "old-text", subdomainLabel.text());
-	
-	function listenForParent(ev) {
-		// Once
-		if (!parent) {
-			debug("Got url from parent window/frame: " + ev.origin);
-			updateDomain(ev.origin);
-			autoclose.attr("checked", true);
-			parent = ev.source;
-			parent_origin = ev.origin;
-		}
-	}
-	
-	function makePassword() {
-		var d = domain.val(),
-			pw = fp.encode(masterpw.val(), d);
-		
-		if (parent) { // Framed
-			parent.postMessage(JSON.stringify({password: pw}), parent_origin);
-		}
-		
-		if (autoclose.attr("checked") && !shiftDown) {
-			window.close();
-		} else {
-			if (parent) parent.focus();
-			result.val(pw);
-		}
-	}
-	
-	result.dblclick(function() { this.select(); });
-	
-	// Build bookmarklet on demand
-	$("#bookmarklet").one("click", function(ev) {
-		var l = window.location,
-			domain = l.protocol + '//' + l.hostname,
-			url = domain + l.pathname,
-			$self = $(this);
-		
-		ev.preventDefault();
-		
-		debug("Building bookmarklet with:", url, domain);
-		
-		$(this).text("Building...");
-		
-		$.get('bookmarklet.min.js', {}, function(data) {
-			var src = data;
-			
-			src = src.replace(/\${homeUrl}/g, url);
-			src = src.replace(/\${homeDomain}/g, domain);
-			
-			$("#bookmarklet").attr("href", 'javascript:' + src);
-			$("#bookmarklet").text("FreePass");
-			
-			$self.click(function(ev) {
-				ev.preventDefault();
-			});
-			
-		}, 'text/plain');
-		
-	});
-	
-});
-	</script>
+	<script src="freepass-gui.js"></script>
 </head>
 <body>
 
 <span id="frame-warning">Your window is framed, security attack !</span>
 
-<div id="content">
-	
-<div id="main">
-	<h3>FreePass 1.0 (beta)</h3>
-	<form id="freepass" onsubmit="return false">
-	
-		<label for="masterpw">Master password</label><input id="masterpw" type="password" autofocus>
-		<label for="domain">Domain</label><input id="domain" type="url" autocomplete="off">
-		
-		<input type="checkbox" id="subdomain" checked>
-		<label for="subdomain" id="subdomain-label">strip subdomain</label>
-	
-		<input id="generate" type="submit" value="generate">
-	
-		<input id="result" autocomplete="off" readonly>
-	</form>
+<div id="content" class="standalone-mode">
+
+<div id="logo">
+	FreePass v1.1
+	<span id="slogan">- one password for all your sites</span>
 </div>
 
-<div id="setup">
-	<h3>Setup</h3>
-	
-	
-	
-	<input type="checkbox" id="autoclose">
-	<label for="autoclose">close on submit (unless SHIFT key is pressed)</label>
-	
-	<p>Bookmarklet: <a id="bookmarklet" href="#">Click to generate</a> (then drag it in your bookmark bar)</p>
+<div id="mode-select">
+	mode: 
+	<a href="#" id="standalone-button" class="selected">standalone</a> 
+	<a href="#" id="connected-button">connected</a>
 </div>
+<form id="freepass" onsubmit="return false">
+	<div class="standalone connected">
+		<label for="masterpw">Master password</label>
+		<input id="masterpw" type="password" autofocus>
+	
+		<label for="domain" id="domain-label">Domain</label>
+		<input id="domain" type="url" autocomplete="off" readonly>
+	
+		<input type="checkbox" id="subdomain" checked>
+		<label for="subdomain" id="subdomain-label">strip subdomain</label>
+	</div>
+	
+	<div class="standalone">
+		<input type="submit" value="make password">
+		
+		<input id="result" autocomplete="off" readonly>
+	</div>
+	<div class="connected">
+		<input type="submit" value="transmit password">
+	</div>
+	<div class="connected-help">
+		<p>To use the connected mode, drag and drop this bookarklet into your bookmark bar: <a id="bookmarklet" href="#">Click to generate</a></p>
+		
+		<p>You can then click on it from any website to connect it with FreePass.</p>
+	</div>
+</form>
 
 <div id="about">
 	<h3>About</h3>
@@ -233,9 +65,31 @@ jQuery(function($) {
 	<p>Source code: <a href="http://github.com/zimbatm/freepass">http://github.com/zimbatm/freepass</a></p>
 </div>
 
+<div id="changelog">
+	<h3>Changelog</h3>
+	<dl>
+		<dt>Version 1.1 - usability fixes</dt>
+		<dd>
+			Made various changes with the help of my friend Shingo
+			<ul>
+				<li>Visual distinction between standalone/connected modes</li>
+				<li></li>
+			</ul>
+		</dd>
+		
+		<dt>Version 1.0 - proof of concept</dt>
+		<dd>
+			<ul>
+				<li>Using HTML5 postMessage API for the bookmarklet</li>
+				<li>Domain extraction algorithm 1.0</li>
+				<li>Password generation algorithm 1.0</li>
+			</ul>
+		</dd>
+	</dl>
+</div>
+
 <div id="debug">
-	<h3>Debug</h3>
-	Debug:
+	<h3>Debug <span id="hashid"></span></h3>
 </div>
 </div>
 
