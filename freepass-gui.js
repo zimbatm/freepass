@@ -19,6 +19,7 @@ jQuery(function($) {
 		subdomain = $("#subdomain"),
 		subdomainLabel = $("label[for=subdomain]"),
 		result = $("#result"),
+		bookmarkletVersion = 1,
 		parent, parent_origin;
 	
 	// Detect if framed, big warning
@@ -114,13 +115,27 @@ jQuery(function($) {
 	function listenForParent(ev) {
 		// Once
 		if (!parent) {
+			try {
+				var msg = JSON.parse(ev.data);
+				if (parseInt(msg.version, 10) < bookmarkletVersion) {
+					throw "propose update";
+				}
+			} catch(err) {
+				proposeBookmarkletUpdate();
+			}
+				
 			debug("Got url from parent window/frame: " + ev.origin);
 			updateDomain(ev.origin);
 			parent = ev.source;
 			parent_origin = ev.origin;
-			
+
 			switchMode("connected");
 		}
+	}
+	
+	function proposeBookmarkletUpdate () {
+		// TODO: show the message somewhere else
+		debug("Please update your bookmarklet");
 	}
 	
 	function makePassword() {
@@ -196,6 +211,7 @@ jQuery(function($) {
 			
 			src = src.replace(/\${homeUrl}/g, url);
 			src = src.replace(/\${homeDomain}/g, domain);
+			src = src.replace(/\${version}/g, bookmarkletVersion);
 			
 			$bookmarklet.attr("href", 'javascript:' + src);
 			$bookmarklet.text("FreePass");

@@ -5,13 +5,20 @@
   var doc = window.document,
     homeUrl = "${homeUrl}",
     homeDomain = "${homeDomain}",
+    bookmarkletVersion = "${version}",
     fid = "freepass",
     pwColor = "#ddffdd",
     insertList = [], insertEvent = false,
-    child, childRef, box, msg, bye, currentPassword;
+    passwd, child, childRef, box, msg, bye, currentPassword;
   
   // Don't run twice
-  if (document.getElementById(fid)) return;
+  if (doc.getElementById(fid)) return;
+  
+  // Keep currently focused password field
+  // NOTE: doesn't seem to work on FF
+  if (doc.activeElement.type && doc.activeElement.type.toLowerCase() == "password") {
+    passwd = doc.activeElement;
+  }
   
   // Build GUI  
   box = doc.createElement("div");
@@ -126,24 +133,28 @@
     // Cleanup
     window.removeEventListener("message", gotMessage, false);
     if (insertEvent) {
-      doc.removeEventListener("dblclick", insertPassword, true);
+      doc.removeEventListener("dblclick", insertPasswordEv, true);
       insertedClear();
     }
     if (child) child.close();
     doc.body.removeChild(box);
   }
   
-  function insertPassword(ev) {
-    var t = ev.target, prevCss;
-    if (t.nodeName.toLowerCase() === "input" && t.type === "password") {
+  function insertPasswordEv(ev) {
+    insertPassword(ev.target);
+  }
+
+  function insertPassword(elem) {
+    var prevCss;
+    if (elem.nodeName.toLowerCase() === "input" && elem.type === "password") {
       if (!insertCheck(t)) {
-        prevCss = t.style.cssText;
-        merge(t.style, {backgroundColor: pwColor});
-        t.value = currentPassword;
-        insertList.push({elem: t, prevCss: prevCss});
+        prevCss = elem.style.cssText;
+        merge(elem.style, {backgroundColor: pwColor});
+        elem.value = currentPassword;
+        insertList.push({elem: elem, prevCss: prevCss});
       } 
     }
-  }
+	}
   
   function insertCheck(elem) {
     for (var i=0; i<insertList.length; i++) {
@@ -162,7 +173,7 @@
   function gotMessage(ev) {
     if (ev.origin === homeDomain) {
       if (ev.data === "hello") { // handshake
-        ev.source.postMessage("world", ev.origin);
+        ev.source.postMessage('{"version":'+version+'}', ev.origin);
         childRef = ev.source;
         say("Waiting for password");
         return;
@@ -175,10 +186,14 @@
         box.style.backgroundColor = pwColor;
         
         if (!insertEvent) {
-          doc.addEventListener("dblclick", insertPassword, true);
+          doc.addEventListener("dblclick", insertPasswordEv, true);
           insertEvent = true;
         } else {
           insertedClear();
+        }
+        
+        if (passwd) {
+          insertPassword(passwd);
         }
         
         say("Got password, double-click on field to insert");
