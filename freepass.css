@@ -45,7 +45,7 @@ body.frame-alert #content {
 }
 
 #logo #slogan {
-	font-size: 90%;
+	font-size: 0.8em;
 }
 
 #freepass {
@@ -53,8 +53,8 @@ body.frame-alert #content {
 	background-color: #aabbcc;
 	padding: 1em;
 	
-	font-size: 2em;
-	line-height: 1.4em;
+	font-size: 1.5em;
+	line-height: 1.5em;
 
 	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -63,8 +63,34 @@ body.frame-alert #content {
 
 #freepass input {
 	width: 100%;
+	font-size: 1.5em;
 	font-family: Monospace, fixed;
+	color: #000;
+	background-color: #fff;
+}
+
+#freepass button {
+	width: 100%;
 	font-size: inherit;
+}
+
+#freepass #domain-wrap {
+	position: relative;
+}
+
+#freepass #domain-mask {
+	width: 100%;
+	font-size: 1.5em;
+	font-family: Monospace, fixed;
+	color: #000;
+	position: absolute;
+	overflow: hidden;
+	
+	padding-left: 4px;
+}
+
+#freepass #domain-mask .prefix, #freepass #domain-mask .postfix {
+	color: #aaa;
 }
 
 #freepass #subdomain {
@@ -72,7 +98,7 @@ body.frame-alert #content {
 }
 
 label[for=subdomain] {
-  font-size: 70%;
+  font-size: 0.7em;
 }
 
 #freepass #result {
@@ -86,8 +112,8 @@ label[for=subdomain] {
 }
 
 #mode-select {
-	font-size: 120%;
-	padding-left: 2em;
+	font-size: 1.5em;
+	padding-left: 1em;
 }
 
 #mode-select a {

@@ -25,33 +25,43 @@
 	<span id="slogan">- one password for all your sites</span>
 </div>
 
-<div id="mode-select">
-	mode: 
-	<a href="#" id="standalone-button" class="selected">standalone</a> 
-	<a href="#" id="connected-button">connected</a>
+<div> 
+	<span id="mode-select">
+		mode :
+		<a href="#" id="standalone-button" class="selected">standalone</a> 
+		<a href="#" id="connected-button">connected</a>
+	</span>
+	<span id="update-bookmarklet" style="display: none">
+		update bookmarklet: 
+		<a href="#" class="bookmarklet">FreePass</a>
+	</span>
 </div>
 <form id="freepass" onsubmit="return false">
 	<div class="standalone connected">
 		<label for="masterpw">Master password</label>
 		<input id="masterpw" type="password" autofocus>
-	
+		
 		<label for="domain" id="domain-label">Domain</label>
-		<input id="domain" type="url" autocomplete="off">
+		
+		<div id="domain-wrap">
+			<div id="domain-mask"><span class="prefix"></span><span class="main"></span><span class="postfix"></span></div>
+			<input id="domain" type="url" autocomplete="off">
+		</div>
 	
 		<input type="checkbox" id="subdomain" checked>
-		<label for="subdomain" id="subdomain-label">strip subdomain</label>
+		<label for="subdomain" id="subdomain-label">extract domain</label>
 	</div>
 	
 	<div class="standalone">
-		<input type="submit" value="make password">
+		<button type="submit">make password</button>
 		
 		<input id="result" autocomplete="off" readonly>
 	</div>
 	<div class="connected">
-		<input type="submit" value="transmit password">
+		<button type="submit">transmit password</button>
 	</div>
 	<div class="connected-help">
-		<p>To use the connected mode, drag and drop this bookarklet into your bookmark bar: <a id="bookmarklet" href="#">Click to generate</a></p>
+		<p>To use the connected mode, drag and drop this bookarklet into your bookmark bar: <a href="#" class="bookmarklet">FreePass</a></p>
 		
 		<p>You can then click on it from any website to connect it with FreePass.</p>
 	</div>
@@ -60,9 +70,11 @@
 <div id="about">
 	<h3>About</h3>
 	
-	<p>Code by <a href="http://jonas.pfenniger.name">Jonas Pfenniger (zimbatm)</a> and <a href="http://github.com/zimbatm/freepass/blob/master/LICENCE">others</a></p>
+	<p>This project has arisen from personal needs and itch to scratch. I'm also using is as a playground for the latests web technologies.</p>
 	
-	<p>Source code: <a href="http://github.com/zimbatm/freepass">http://github.com/zimbatm/freepass</a></p>
+	<p>I hope you like it,<br>
+		&nbsp;&nbsp;&nbsp;<a href="http://jonas.pfenniger.name">Jonas Pfenniger (zimbatm)</a>
+	</p>
 </div>
 
 <div id="changelog">
@@ -70,11 +82,11 @@
 	<dl>
 		<dt>Version 1.1 (beta) - usability fixes</dt>
 		<dd>
-			Made various changes with the help of my friend Shingo
+			Made various changes after enlightment of my friend Shingo
 			<ul>
 				<li>Visual distinction between standalone/connected modes</li>
-				<li>TODO: notify bookmarklet version updates</li>
-				<li>TODO: change domain extraction behaviour</li>
+				<li>Notify bookmarklet version updates</li>
+				<li>Visual domain extraction behaviour</li>
 			</ul>
 		</dd>
 		

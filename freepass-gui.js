@@ -1,21 +1,10 @@
-
-function debug() {
-	var d = $("#debug");
-	for (var i=0; i<arguments.length; i++) {
-		d.append("<div>" + arguments[i] + "</div>");
-	}
-}
-
-function isFramed() {
-	// or: top !== self
-	return (window !== window.parent);
-}
-
 jQuery(function($) {
 	var fp = window.FreePass,
 		form = $("form#freepass"),
 		masterpw = $("#masterpw"),
 		domain = $("#domain"),
+		$debug = $("#debug"),
+		domainMask = $("#domain-mask"),
 		subdomain = $("#subdomain"),
 		subdomainLabel = $("label[for=subdomain]"),
 		result = $("#result"),
@@ -55,9 +44,8 @@ jQuery(function($) {
 	// Use referrer if available
 	if (document.referrer && document.referrer.length > 0) {
 		debug("Got url from referrer: " + document.referrer);
-		updateDomain(document.referrer);
+		setDomain(document.referrer);
 	}
-	
 	
 	$(document).keydown(function (ev) {
 		if (ev.which === 16 && parent) {
@@ -70,8 +58,8 @@ jQuery(function($) {
 			switchMode("connected");
 		}
 	});
-	// 
-	form.submit(function(ev) {
+	
+	form.submit(function (ev) {
 		ev.stopPropagation();
 		try {
 			updateDomain();
@@ -80,79 +68,33 @@ jQuery(function($) {
 		return false;
 	});
 	
-	function updateDomain(val) {
-		if (subdomain.attr("checked")) {
-			if (!val) val = domain.val();
-			if (val !== "") {
-				var short = fp.extractDomain(val, true);
-				if (val !== short) subdomainLabel.text( val );
-				domain.val(short);
-			}
-		} else if (val) {
-			domain.val(val);
+	domain.focus(function () {
+		showMask(false);
+		domain.val($.data(domain, "domain"));
+	});
+	
+	domain.blur(function () {
+		if (filterSubdomain()) {
+			showMask(true);
 		}
-	};
+	});
+	
+	domainMask.click(function (ev) {
+		// FIXME: we should know where to place the carret
+		domain.focus();
+	});
+	
+	// Adjust domain mask position
+	domainMask.css({
+		top: parseInt(domain.css('borderTopWidth'), 10),
+		left: parseInt(domain.css('borderLeftWidth'), 10),
+		lineHeight: domain.outerHeight() + 'px'
+	});
+	
 	domain.change(function() {
-		updateDomain();
+		setDomain(domain.val());
 	});
-	
-	subdomain.change(function () {
-		var $this = $(this);
-		if ($this.attr("checked")) {
-			updateDomain();
-		} else {
-			// Restore
-			var oldText = $.data(subdomainLabel, "old-text"),
-				oldDomain = subdomainLabel.text();
-				
-			if (oldText !== oldDomain) domain.val( oldDomain );
-			
-			subdomainLabel.text( oldText );
-		}
-	});
-	$.data(subdomainLabel, "old-text", subdomainLabel.text());
-	
-	function listenForParent(ev) {
-		// Once
-		if (!parent) {
-			try {
-				var msg = JSON.parse(ev.data);
-				if (parseInt(msg.version, 10) < bookmarkletVersion) {
-					throw "propose update";
-				}
-			} catch(err) {
-				proposeBookmarkletUpdate();
-			}
-				
-			debug("Got url from parent window/frame: " + ev.origin);
-			updateDomain(ev.origin);
-			parent = ev.source;
-			parent_origin = ev.origin;
-
-			switchMode("connected");
-		}
-	}
-	
-	function proposeBookmarkletUpdate () {
-		// TODO: show the message somewhere else
-		debug("Please update your bookmarklet");
-	}
-	
-	function makePassword() {
-		var d = domain.val(),
-			pw = fp.encode(masterpw.val(), d);
-		
-		if (parent) { // Framed
-			parent.postMessage(JSON.stringify({password: pw}), parent_origin);
-		}
-		
-		if (shouldClose()) {
-			window.close();
-		} else {
-			if (parent) parent.focus();
-			result.val(pw);
-		}
-	}
+	subdomain.change(updateDomain);
 	
 	result.dblclick(function() { this.select(); });
 	
@@ -179,9 +121,101 @@ jQuery(function($) {
 			switchMode("connected");
 		} else {
 			switchMode("connected-help");
-			buildBookmarklet($("#bookmarklet"));
+			buildBookmarklet();
 		}
 	});
+	
+	/* Utility functions */
+	
+	function updateDomain() {
+		var val = $.data(domain, "domain");
+		domain.blur();
+		
+		domainMask.find(".prefix").text("");
+		domainMask.find(".main").text("");
+		domainMask.find(".postfix").text("");
+		
+		if (filterSubdomain()) {
+			var short = fp.extractDomain(val, true),
+				pos = val.indexOf(short),
+				pre = val.slice(0, pos),
+				post = val.slice(pos + short.length);
+					
+			domainMask.find(".prefix").text(pre);
+			domainMask.find(".main").text(short);
+			domainMask.find(".postfix").text(post);
+				
+			domain.val(short);
+			
+			showMask(true);
+		} else {
+			domain.val(val);
+			showMask(false);
+		}
+	}
+	
+	function showMask(yes) {
+		if (yes) {
+			domainMask.show();
+			domain.css("color", "#fff");
+		} else {
+			domainMask.hide();
+			domain.css("color", "");
+		}
+	}
+	
+	function setDomain(value) {
+		$.data(domain, "domain", value);
+		updateDomain();
+	}
+	
+	function filterSubdomain() {
+		var val = $.data(domain, "domain");
+		return subdomain.attr("checked") && val && val !== "";
+	}
+	
+	function listenForParent(ev) {
+		// Once
+		if (!parent) {
+			try {
+				var msg = JSON.parse(ev.data);
+				if (parseInt(msg.version, 10) < bookmarkletVersion) {
+					throw "propose update";
+				}
+			} catch(err) {
+				proposeBookmarkletUpdate();
+			}
+				
+			debug("Got url from parent window/frame: " + ev.origin);
+			setDomain(ev.origin);
+			parent = ev.source;
+			parent_origin = ev.origin;
+
+			switchMode("connected");
+		}
+	}
+	
+	function proposeBookmarkletUpdate () {
+		debug("Please update your bookmarklet");
+		buildBookmarklet();
+		$("#update-bookmarklet").show();
+	}
+	
+	function makePassword() {
+		var d = domain.val(),
+			pw = fp.encode(masterpw.val(), d);
+		
+		if (parent) { // Framed
+			parent.postMessage(JSON.stringify({password: pw}), parent_origin);
+		}
+		
+		if (shouldClose()) {
+			window.close();
+		} else {
+			if (parent) parent.focus();
+			result.val(pw);
+		}
+	}
 	
 	function switchMode(newMode) {
 		var $c = $("#content");
@@ -194,13 +228,24 @@ jQuery(function($) {
 		return $("#content").hasClass("connected-mode");
 	}
 	
+	function debug() {
+		for (var i=0; i<arguments.length; i++) {
+			$debug.append("<div>" + arguments[i] + "</div>");
+		}
+	}
+	
+	function isFramed() {
+		// or: top !== self
+		return (window !== window.parent);
+	}
+	
 	// Build bookmarklet
 	// TODO: if it fails, lookup in the page for a <script type="text/bookmarklet">
-	function buildBookmarklet(elem) {
+	function buildBookmarklet() {
 		var l = window.location,
 			domain = l.protocol + '//' + l.hostname,
 			url = domain + l.pathname,
-			$bookmarklet = $(elem);
+			$bookmarklet = $(".bookmarklet");
 		
 		debug("Building bookmarklet for:", url, domain);
 		
