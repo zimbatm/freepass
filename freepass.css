@@ -145,7 +145,7 @@ label[for=subdomain] {
 	background-color: #cba;
 }
 
-.standalone, .connected, .connected-help {
+.standalone, .connected, .connected-help, .connected-incompatible {
 	display: none;
 }
 
@@ -165,8 +165,6 @@ label[for=subdomain] {
 	background-color: #abc;
 }
 
-#content.connected-mode #freepass, #content.connected-help-mode #freepass {
+#content.connected-mode #freepass, #content.connected-help-mode #freepass, #content.connected-incompatible-mode #freepass {
 	background-color: #cba;
 }
-
-

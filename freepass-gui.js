@@ -119,9 +119,11 @@ jQuery(function($) {
 		this.blur();
 		if (parent) {
 			switchMode("connected");
-		} else {
+		} else if (window.postMessage) {
 			switchMode("connected-help");
 			buildBookmarklet();
+		} else {
+		  switchMode("connected-incompatible");
 		}
 	});
 	
@@ -219,7 +221,7 @@ jQuery(function($) {
 	
 	function switchMode(newMode) {
 		var $c = $("#content");
-		$c.removeClass("standalone-mode connected-mode connected-help-mode");
+		$c.removeClass("standalone-mode connected-mode connected-help-mode connected-incompatible-mode");
 		$c.addClass(newMode + "-mode");
 	}
 	
