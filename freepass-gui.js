@@ -47,18 +47,6 @@ jQuery(function($) {
 		setDomain(document.referrer);
 	}
 	
-	$(document).keydown(function (ev) {
-		if (ev.which === 16 && parent) {
-			switchMode("standalone");
-		}
-	});
-	
-	$(document).keyup(function (ev) {
-		if (ev.which === 16 && parent) {
-			switchMode("connected");
-		}
-	});
-	
 	form.submit(function (ev) {
 		ev.stopPropagation();
 		try {
