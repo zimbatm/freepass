@@ -76,6 +76,7 @@ Future ideas
 * Add some unit-tests (with nodejs ?)
 * Provide a command-line tool for password generation (with nodejs ?)
 * Publish the password-generation algorithm
+* Use http://publicsuffix.org/
 
 Links
 -----
