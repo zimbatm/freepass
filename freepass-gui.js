@@ -8,6 +8,7 @@ jQuery(function($) {
 		subdomain = $("#subdomain"),
 		subdomainLabel = $("label[for=subdomain]"),
 		result = $("#result"),
+		hasPostMessage = false,
 		bookmarkletVersion = 1,
 		parent, parent_origin;
 	
@@ -15,6 +16,25 @@ jQuery(function($) {
 	if (isFramed()) {
 		$(document.body).addClass("frame-alert");
 	}
+	
+	// Test for postMessage API
+	(function() {
+		function gotMessage(ev) {
+			if (ev.data === "test" && ev.source === window) {
+				hasPostMessage = true;
+				window.removeEventListener("message", gotMessage, false);
+				debug("postMessage: supported");
+			}
+		}
+		
+		try {
+			//if (!window.addEventListener) return;
+			window.addEventListener("message", gotMessage, false);
+			window.postMessage("test", "*");
+		} catch(err) {
+			debug(err);
+		}
+	})();
 	
 	// Apply hashmask plugin
 	masterpw.hashmask();
@@ -27,18 +47,13 @@ jQuery(function($) {
 		
 		// Handshake to say it is loaded
 		try {
+			window.addEventListener("message", listenForParent, false);
 			// TO: whomever called me
 			window.opener.postMessage("hello", "*");
 			debug("called from bookmarklet, notifying parent");
 		} catch(err) {
 			debug("Browser doesn't support the postMessage API");
 		}
-	}
-	
-	try {
-		window.addEventListener("message", listenForParent, false);
-	} catch(err) {
-		debug("Browser doesn't support the postMessage API");
 	}
 	
 	// Use referrer if available
@@ -76,6 +91,7 @@ jQuery(function($) {
 	domainMask.css({
 		top: parseInt(domain.css('borderTopWidth'), 10),
 		left: parseInt(domain.css('borderLeftWidth'), 10),
+		height: domain.outerHeight() + 'px',
 		lineHeight: domain.outerHeight() + 'px'
 	});
 	
@@ -107,7 +123,7 @@ jQuery(function($) {
 		this.blur();
 		if (parent) {
 			switchMode("connected");
-		} else if (window.postMessage) {
+		} else if (hasPostMessage) {
 			switchMode("connected-help");
 			buildBookmarklet();
 		} else {
@@ -167,16 +183,25 @@ jQuery(function($) {
 	function listenForParent(ev) {
 		// Once
 		if (!parent) {
+			var known = false, proposeUpdate = false;
 			try {
-				var msg = JSON.parse(ev.data);
-				if (parseInt(msg.version, 10) < bookmarkletVersion) {
-					throw "propose update";
+				if (ev.data === "hello") {
+					known = true;
+					proposeUpdate = true;
+					throw "next"
 				}
-			} catch(err) {
-				proposeBookmarkletUpdate();
-			}
+					
+				var msg = JSON.parse(ev.data);
+				if (msg.version) {
+					known = true;
+					proposeUpdate = (msg.version < bookmarkletVersion);
+				}
+			} catch(err) { }
+			
+			if (!known) return;
+			if (proposeUpdate) proposeBookmarkletUpdate();
 				
-			debug("Got url from parent window/frame: " + ev.origin);
+			debug("Got url from parent window: " + ev.origin);
 			setDomain(ev.origin);
 			parent = ev.source;
 			parent_origin = ev.origin;
@@ -237,7 +262,7 @@ jQuery(function($) {
 			url = domain + l.pathname,
 			$bookmarklet = $(".bookmarklet");
 		
-		debug("Building bookmarklet for:", url, domain);
+		debug("Building bookmarklet for:", url);
 		
 		$bookmarklet.text("Building...");
 		

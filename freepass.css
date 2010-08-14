@@ -83,10 +83,10 @@ body.frame-alert #content {
 	font-size: 1.5em;
 	font-family: Monospace, fixed;
 	color: #000;
-	position: absolute;
-	overflow: hidden;
 	
-	padding-left: 4px;
+	position: absolute;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 #freepass #domain-mask .prefix, #freepass #domain-mask .postfix {
@@ -158,6 +158,10 @@ label[for=subdomain] {
 }
 
 #content.connected-help-mode .connected-help {
+	display: block;
+}
+
+#content.connected-incompatible-mode .connected-incompatible {
 	display: block;
 }
 
