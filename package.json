@@ -1,0 +1,9 @@
+{
+    "name": "freepass",
+    "version": "1.1.0",
+    "description": "Hash-based password generator",
+    "homepage": "http://github.com/zimbatm/freepass",
+    "author": "Jonas Pfenniger <jonas@pfenniger.name>"
+    "engines" : { "node": ">= 0.2.0", "browser" },
+    "bin" : { "freepass" : "./bin/freepass" }
+}
