@@ -16,10 +16,10 @@ end
 task :default => :dev
 
 desc "Development build"
-task :dev => ["_build/freepass.html", "_build/freepass.css", "_build/freepass.js"]
+task :dev => ["_build/freepass.html", "_build/freepass.css", "_build/freepass.js", "_build/bookmarklet.min.js"]
 
 desc "Production build"
-task :prod => "_build/index.html"
+task :prod => ["_build/bookmarklet.min.js", "_build/index.html"]
 
 $cc = Closure::Compiler.new(:compilation_level => 'ADVANCED_OPTIMIZATIONS')
 def concat(*files)
