@@ -1,0 +1,108 @@
+#!/usr/bin/env ruby
+#
+# Coerces different minization engines
+#
+
+require 'optparse'
+begin
+  require 'rubygems'
+rescue LoadError; end
+
+config = {}
+ENGINES = {}
+opts = OptionParser.new do |opts|
+  opts.banner = "Usage: jsmin [options] JSFILE OUTFILE"
+  
+  opts.on("-e", "--engine NAME", "Select an compression engine") do |e|
+    config["engine"] = e
+  end
+  opts.on("-h", "--help", "Shows this help") do
+    puts opts
+    exit
+  end
+end
+begin
+  opts.parse!
+rescue OptionParser::ParseError => ex
+  $stderr.puts ex
+  $stderr.puts opts
+  exit 1
+end
+
+if ARGV[0].nil?
+  $stderr.puts "Usage: jsmin JS_FILE"
+  exit 1
+end
+
+source = ARGV[0]
+if !File.readable?(source) && source != "-"
+  $stderr.puts "File does not exist: #{source}"
+  exit 1
+end
+
+if source == "-"
+  input = $stdin
+else
+  input = File.open(source, 'r')
+end
+
+if ARGV[1]
+  output = File.open(ARGV[1], 'w')
+else
+  output = $stdout
+end
+
+def add_engine(name, &engine)
+  ENGINES[name] = engine
+end
+
+add_engine('closure') do |input, output|
+  require 'closure-compiler'
+  compiler = Closure::Compiler.new(:compilation_level => 'ADVANCED_OPTIMIZATIONS')
+  output.write compiler.compile(input.read)
+end
+
+add_engine('uglifyjs') do |input, output|
+  if !system("which uglifyjs > /dev/null 2>&1")
+    raise LoadError, "uglifyjs executable not found"
+  end
+  
+  IO.popen("uglifyjs --no-copyright", 'w') do |stdin|
+    while line = input.gets
+      stdin.puts line
+    end
+    stdin.close
+    file.close
+  end
+end
+
+add_engine('yui') do |input, output|
+  require 'yui/compressor'
+  compressor = YUI::JavaScriptCompressor.new(:munge => true)
+  output.write compressor.compress(input.read)
+end
+
+if ((engine_name = config["engine"]))
+  engine = ENGINES[engine_name]
+  
+  if !engine
+    $stderr.puts "Engine #{engine_name} could not be found in #{ENGINES.keys.join(',')}"
+    exit 1
+  end
+  
+  begin
+    engine.call(input, output)
+  rescue LoadError
+    $stderr.puts "#{engine_name} could not be loaded"
+    exit 1
+  end
+else
+  ENGINES.each_pair do |name, engine|
+    begin
+      engine.call(input, output)
+      break
+    rescue LoadError
+      $stderr.puts "#{name} could not be loaded"
+    end
+  end
+end

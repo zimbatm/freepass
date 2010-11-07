@@ -2,37 +2,22 @@
 # One file to rule them all
 #
 # A little tool that joins JavaScript resources and CSS resources into the HTML
-
-errors = []
+# 
+# TODO: also join images ?
 
 begin
 	require 'rubygems'
-rescue LoadError
-	$stderr.puts '* rubygems not installed'
-end
+rescue LoadError; end
 
 begin
 	require 'nokogiri'
 rescue LoadError
-	errors << '* missing nokogiri gem'
-end
-
-begin
-	require 'closure-compiler'
-rescue LoadError
-  errors << '* missing closure-compiler gem'
-end
-
-if errors.any?
-  $stderr.puts "ERROR(s):"
-  errors.each do |err|
-    $stderr.puts err
-  end
-  exit 1
+	$stderr.puts 'ERROR: nokogiri library not found'
+	exit 1
 end
 
 def usage()
-  $stderr.puts "usage: #{File.basename($0)} <SOURCE_HTML> <OUT_HTML>"
+  $stderr.puts "Usage: #{File.basename($0)} <SOURCE_HTML> <OUT_HTML>"
   exit 1
 end
 
@@ -54,9 +39,6 @@ doc = Nokogiri::HTML(File.open(SRC)){ |config| config.strict }
 ##
 ## CSS
 ##
-
-# TODO: minify CSS
-puts "* compiling CSS"
 css_content = []
 doc.css('link[rel="stylesheet"]').each do |link|
   css_content << File.read(File.join(SRC_DIR, link['href']))
@@ -70,18 +52,17 @@ doc.at_css('head').add_child style
 ##
 ## JavaScript
 ###
-puts "* compiling JavaScript"
 js_content = []
 doc.css("script[src]").each do |script|
   js_content << File.read(File.join(SRC_DIR, script['src']))
   script.unlink
 end
-compiler = Closure::Compiler.new(:compilation_level => 'ADVANCED_OPTIMIZATIONS')
-compiled_js = compiler.compile(js_content.join)
+
+js_content = js_content.join
 
 script = doc.create_element('script')
-# NOTE: HTML comment is necessary for nokogiri to work wtf??
-script.inner_html = "<!--@\n"+compiled_js+"\n@-->"
+# BUG: HTML comment is necessary for nokogiri to understand the content of the <script> tag
+script.inner_html = "<!--@\n"+js_content+"\n@-->"
 doc.at_css('head').add_child script
 
 ##
@@ -91,5 +72,3 @@ doc.at_css('head').add_child script
 out_html = doc.to_html.gsub("<!--@\n",'').gsub("\n@-->", '')
 
 File.open(DST, 'w'){|f| f.write out_html }
-
-puts "* bundle #{DST} created"

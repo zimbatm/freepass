@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+#
+# CommonJS wrapper for the browser
+#
+# Usage: output mainmodule src1 src2 ...
+#
+# TODO: solve dependencies automatically
+# TODO: lookup-paths
+# TODO: command-line arguments checks
+
+DST_FILE = ARGV[0]
+MAIN_MODULE = ARGV[1]
+DEPS = ARGV[2..-1]
+
+JS_TEMPLATE = <<TEMPLATE
+(function() {
+  function module(id, def) {
+    exports[id] = {id: id, def: def, exports: null}
+  }
+  
+  var exports = {
+    // Default browser module that exports the browser env
+    browser: {
+      exports: {
+        window: window,
+        document: document
+      }
+    }
+  };
+  
+  function require(id) {
+    id = id.replace(/^\.\//, '');
+    //FIXME: relative paths
+    if (!(id in exports)) {
+      throw "Unknown module '" + id + "'";
+    }
+    var mod = exports[id];
+    if (!mod.exports) {
+      mod.exports = {};
+      mod.def.call(null, mod, mod.exports, require);
+    }
+    return mod.exports;
+  }
+  
+  ;;;
+  
+  require(";;;");
+}());
+TEMPLATE
+
+# Creates a CommonJS environment and include the needed modules
+# NOTE: Wanted to use String#sub, but some \\ characters get stripped
+File.open(DST_FILE, 'w') do |f|
+  modjs = JS_TEMPLATE.split(';;;');
+  
+  modules = DEPS.map do |fname|
+    "module(\"#{fname.sub(/.*\/lib\//,'').sub(/^lib\//, '').sub('./', '').sub(/\.js$/,'')}\", " +
+      "function(module, exports, require){" + File.read(fname) + "});"
+  end
+  
+  f.write [modjs[0], modules.join("\n"), modjs[1], MAIN_MODULE, modjs[2]].join
+end

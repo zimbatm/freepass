@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# TODO: command-line arg check
+
+begin
+  require 'rubygems'
+rescue LoadError; end
+
+begin
+  require 'yui/compressor'
+rescue LoadError
+  $stderr.puts "ERROR: yui-compressor library not found"
+  exit 1
+end
+
+require 'yui/compressor'
+compressor = YUI::CssCompressor.new
+out = compressor.compress File.read(ARGV[0])
+File.open(ARGV[1], 'w') do |f|
+  f.write out
+end

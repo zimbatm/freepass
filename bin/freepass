@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require.paths.push('./lib')
+
 var sys = require('sys'),
   fp = require('freepass'),
   ARGV = process.ARGV;
@@ -9,4 +11,8 @@ var sys = require('sys'),
 // TODO: propose domain extraction
 // TODO: get password trough readline
 
-sys.puts(fp.encode(ARGV[2], ARGV[3]));
+var tld = fp.extractDomain(ARGV[3], true);
+sys.puts(tld);
+
+sys.puts(fp.encode(ARGV[2], fp.extractDomain(ARGV[3])));
+
