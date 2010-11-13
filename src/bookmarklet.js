@@ -154,7 +154,7 @@
         insertList.push({elem: elem, prevCss: prevCss});
       } 
     }
-	}
+  }
   
   function insertCheck(elem) {
     for (var i=0; i<insertList.length; i++) {

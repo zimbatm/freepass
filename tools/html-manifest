@@ -7,16 +7,16 @@
 errors = []
 
 begin
-	require 'rubygems'
+  require 'rubygems'
 rescue LoadError
-	$stderr.puts '* rubygems not installed'
+  $stderr.puts '* rubygems not installed'
 end
 
 begin
-	require 'nokogiri'
+  require 'nokogiri'
 rescue LoadError
-	$stderr.puts 'ERROR: missing nokogiri gem'
-	exit 1
+  $stderr.puts 'ERROR: missing nokogiri gem'
+  exit 1
 end
 
 def usage()

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	
-	<title>FreePass v1.1 - one password for all your sites</title>
-	
-	<link rel="stylesheet" href="freepass.css">
-	
-	<script src="freepass.js"></script>
+  <meta charset="utf-8">
+  
+  <title>FreePass v1.1 - one password for all your sites</title>
+  
+  <link rel="stylesheet" href="freepass.css">
+  
+  <script src="freepass.js"></script>
 </head>
 <body>
 
@@ -16,93 +16,93 @@
 <div id="content" class="standalone-mode">
 
 <div id="logo">
-	FreePass v1.1 (beta)
-	<span id="slogan">- one password for all your sites</span>
+  FreePass v1.1 (beta)
+  <span id="slogan">- one password for all your sites</span>
 </div>
 
 <div> 
-	<span id="mode-select">
-		mode :
-		<a href="#" id="standalone-button" class="selected">standalone</a> 
-		<a href="#" id="connected-button">connected</a>
-	</span>
-	<span id="update-bookmarklet" style="display: none">
-		update bookmarklet: 
-		<a href="#" class="bookmarklet">FreePass</a>
-	</span>
+  <span id="mode-select">
+    mode :
+    <a href="#" id="standalone-button" class="selected">standalone</a> 
+    <a href="#" id="connected-button">connected</a>
+  </span>
+  <span id="update-bookmarklet" style="display: none">
+    update bookmarklet: 
+    <a href="#" class="bookmarklet">FreePass</a>
+  </span>
 </div>
 <form id="freepass" onsubmit="return false">
-	<div class="standalone connected">
-		<label for="masterpw">Master password</label>
-		<input id="masterpw" type="password" autofocus>
-		
-		<label for="domain" id="domain-label">Domain</label>
-		
-		<div id="domain-wrap">
-			<div id="domain-mask"><span class="prefix"></span><span class="main"></span><span class="postfix"></span></div>
-			<input id="domain" type="url" autocomplete="off">
-		</div>
-	
-		<input type="checkbox" id="subdomain" checked>
-		<label for="subdomain" id="subdomain-label">extract domain</label>
-	</div>
-	
-	<div class="standalone">
-		<button type="submit">make password</button>
-		
-		<input id="result" autocomplete="off" readonly>
-	</div>
-	<div class="connected">
-		<button type="submit">transmit password</button>
-	</div>
-	<div class="connected-help">
-		<p>To use the connected mode, drag and drop this bookarklet into your bookmark bar: <a href="#" class="bookmarklet">FreePass</a></p>
-		
-		<p>You can then click on it from any website to connect it with FreePass.</p>
-	</div>
-	<div class="connected-incompatible">
-		<p>Connected mode doesn't work on your browser, try updating it.</p>
-		
-		<p>Otherwise, <a href="http://getfirefox.com">Firefox</a> and <a href="http://www.google.ch/chrome">Chrome</a> are known good contenders.</p>
-	</div>
+  <div class="standalone connected">
+    <label for="masterpw">Master password</label>
+    <input id="masterpw" type="password" autofocus>
+    
+    <label for="domain" id="domain-label">Domain</label>
+    
+    <div id="domain-wrap">
+      <div id="domain-mask"><span class="prefix"></span><span class="main"></span><span class="postfix"></span></div>
+      <input id="domain" type="url" autocomplete="off">
+    </div>
+  
+    <input type="checkbox" id="subdomain" checked>
+    <label for="subdomain" id="subdomain-label">extract domain</label>
+  </div>
+  
+  <div class="standalone">
+    <button type="submit">make password</button>
+    
+    <input id="result" autocomplete="off" readonly>
+  </div>
+  <div class="connected">
+    <button type="submit">transmit password</button>
+  </div>
+  <div class="connected-help">
+    <p>To use the connected mode, drag and drop this bookarklet into your bookmark bar: <a href="#" class="bookmarklet">FreePass</a></p>
+    
+    <p>You can then click on it from any website to connect it with FreePass.</p>
+  </div>
+  <div class="connected-incompatible">
+    <p>Connected mode doesn't work on your browser, try updating it.</p>
+    
+    <p>Otherwise, <a href="http://getfirefox.com">Firefox</a> and <a href="http://www.google.ch/chrome">Chrome</a> are known good contenders.</p>
+  </div>
 </form>
 
 <div id="about">
-	<h3>About</h3>
-	
-	<p>This project has arisen from personal needs and itch to scratch. I'm also using is as a playground for the latests web technologies.</p>
-	
-	<p>I hope you like it,<br>
-		&nbsp;&nbsp;&nbsp;<a href="http://jonas.pfenniger.name">Jonas Pfenniger (zimbatm)</a>
-	</p>
+  <h3>About</h3>
+  
+  <p>This project has arisen from personal needs and itch to scratch. I'm also using is as a playground for the latests web technologies.</p>
+  
+  <p>I hope you like it,<br>
+    &nbsp;&nbsp;&nbsp;<a href="http://jonas.pfenniger.name">Jonas Pfenniger (zimbatm)</a>
+  </p>
 </div>
 
 <div id="changelog">
-	<h3>Changelog</h3>
-	<dl>
-		<dt>Version 1.1 (beta) - usability fixes</dt>
-		<dd>
-			Made various changes after enlightment of my friend Shingo
-			<ul>
-				<li>Visual distinction between standalone/connected modes</li>
-				<li>Notify bookmarklet version updates</li>
-				<li>Visual domain extraction behaviour</li>
-			</ul>
-		</dd>
-		
-		<dt>Version 1.0 (24 april 2010) - proof of concept</dt>
-		<dd>
-			<ul>
-				<li>Using HTML5 postMessage API for the bookmarklet</li>
-				<li>Domain extraction algorithm 1.0</li>
-				<li>Password generation algorithm 1.0</li>
-			</ul>
-		</dd>
-	</dl>
+  <h3>Changelog</h3>
+  <dl>
+    <dt>Version 1.1 (beta) - usability fixes</dt>
+    <dd>
+      Made various changes after enlightment of my friend Shingo
+      <ul>
+        <li>Visual distinction between standalone/connected modes</li>
+        <li>Notify bookmarklet version updates</li>
+        <li>Visual domain extraction behaviour</li>
+      </ul>
+    </dd>
+    
+    <dt>Version 1.0 (24 april 2010) - proof of concept</dt>
+    <dd>
+      <ul>
+        <li>Using HTML5 postMessage API for the bookmarklet</li>
+        <li>Domain extraction algorithm 1.0</li>
+        <li>Password generation algorithm 1.0</li>
+      </ul>
+    </dd>
+  </dl>
 </div>
 
 <div id="debug">
-	<h3>Debug <span id="hashid"></span></h3>
+  <h3>Debug <span id="hashid"></span></h3>
 </div>
 </div>
 

@@ -1,10 +1,10 @@
 
 body {
-	background-color: #fff;
-	color: #444;
-	
-	font-family: Trebuchet MS, Helvetica, Arial, sans-serif;
-	font-size: 62.5%; /* 16px × 62.5% = 10px */
+  background-color: #fff;
+  color: #444;
+  
+  font-family: Trebuchet MS, Helvetica, Arial, sans-serif;
+  font-size: 62.5%; /* 16px × 62.5% = 10px */
 }
 
 form {
@@ -14,13 +14,13 @@ form {
 
 /* Warning ! */
 body.frame-alert {
-	background-color: red;
-	padding: 5em;
+  background-color: red;
+  padding: 5em;
 }
 
 #frame-warning {
-	display: none;
-	text-align: center;
+  display: none;
+  text-align: center;
 }
 
 body.frame-alert #frame-warning {
@@ -29,68 +29,68 @@ body.frame-alert #frame-warning {
 }
 
 body.frame-alert #content {
-	display: none;
-	visibility: hidden;
+  display: none;
+  visibility: hidden;
 }
 
 #content {
-	width: 45em;
-	margin: 0 auto;
-	font-size: 1.2em;
+  width: 45em;
+  margin: 0 auto;
+  font-size: 1.2em;
 }
 
 #logo {
-	font-size: 1.5em;
-	margin: 1em 0;
+  font-size: 1.5em;
+  margin: 1em 0;
 }
 
 #logo #slogan {
-	font-size: 0.8em;
+  font-size: 0.8em;
 }
 
 #freepass {
-	position: relative;
-	background-color: #aabbcc;
-	padding: 1em;
-	
-	font-size: 1.5em;
-	line-height: 1.5em;
+  position: relative;
+  background-color: #aabbcc;
+  padding: 1em;
+  
+  font-size: 1.5em;
+  line-height: 1.5em;
 
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
 
 #freepass input {
-	width: 100%;
-	font-size: 1.5em;
-	font-family: Monospace, fixed;
-	color: #000;
-	background-color: #fff;
+  width: 100%;
+  font-size: 1.5em;
+  font-family: Monospace, fixed;
+  color: #000;
+  background-color: #fff;
 }
 
 #freepass button {
-	width: 100%;
-	font-size: inherit;
+  width: 100%;
+  font-size: inherit;
 }
 
 #freepass #domain-wrap {
-	position: relative;
+  position: relative;
 }
 
 #freepass #domain-mask {
-	width: 100%;
-	font-size: 1.5em;
-	font-family: Monospace, fixed;
-	color: #000;
-	
-	position: absolute;
-	white-space: nowrap;
-	overflow: hidden;
+  width: 100%;
+  font-size: 1.5em;
+  font-family: Monospace, fixed;
+  color: #000;
+  
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 #freepass #domain-mask .prefix, #freepass #domain-mask .postfix {
-	color: #aaa;
+  color: #aaa;
 }
 
 #freepass #subdomain {
@@ -102,9 +102,9 @@ label[for=subdomain] {
 }
 
 #freepass #result {
-	text-align: center;
-	background: inherit;
-	border: none;
+  text-align: center;
+  background: inherit;
+  border: none;
 }
 
 #debug {
@@ -112,63 +112,63 @@ label[for=subdomain] {
 }
 
 #mode-select {
-	font-size: 1.5em;
-	padding-left: 1em;
+  font-size: 1.5em;
+  padding-left: 1em;
 }
 
 #mode-select a {
-	text-decoration: none;
-	color: #000;
-	padding: 0.2em 1em 0 1em;
-	
-	margin-right: 0.5em;
-	
-	border-top-left-radius: 5px;
-	-moz-border-radius-topleft: 5px;
-	-webkit-border-top-left-radius: 5px;
-	
-	border-top-right-radius: 5px;
-	-moz-border-radius-topright: 5px;
-	-webkit-border-top-right-radius: 5px;
+  text-decoration: none;
+  color: #000;
+  padding: 0.2em 1em 0 1em;
+  
+  margin-right: 0.5em;
+  
+  border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -webkit-border-top-left-radius: 5px;
+  
+  border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -webkit-border-top-right-radius: 5px;
 
 }
 
 #mode-select a:hover {
-	color: #fff;
+  color: #fff;
 }
 
 #standalone-button {
-	background-color: #abc;
+  background-color: #abc;
 }
 
 #connected-button {
-	background-color: #cba;
+  background-color: #cba;
 }
 
 .standalone, .connected, .connected-help, .connected-incompatible {
-	display: none;
+  display: none;
 }
 
 #content.standalone-mode .standalone {
-	display: block;
+  display: block;
 }
 
 #content.connected-mode .connected {
-	display: block;
+  display: block;
 }
 
 #content.connected-help-mode .connected-help {
-	display: block;
+  display: block;
 }
 
 #content.connected-incompatible-mode .connected-incompatible {
-	display: block;
+  display: block;
 }
 
 #content.standalone-mode #freepass {
-	background-color: #abc;
+  background-color: #abc;
 }
 
 #content.connected-mode #freepass, #content.connected-help-mode #freepass, #content.connected-incompatible-mode #freepass {
-	background-color: #cba;
+  background-color: #cba;
 }
