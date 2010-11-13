@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>FreePass v1.1 - one password for all your sites</title>
+  <title>FreePass v1.2 - one password for all your sites</title>
   
   <link rel="stylesheet" href="freepass.css">
   
@@ -16,7 +16,7 @@
 <div id="content" class="standalone-mode">
 
 <div id="logo">
-  FreePass v1.1 (beta)
+  FreePass v1.2
   <span id="slogan">- one password for all your sites</span>
 </div>
 
@@ -80,6 +80,16 @@
 <div id="changelog">
   <h3>Changelog</h3>
   <dl>
+    <dt>Version 1.2 - CommonJS</dt>
+    <dd>
+      Now using the CommonJS module system in the browser. 
+      Moved away from 3 simple files, but gained ability to toolize
+      <ul>
+        <li>Implemented a static CommonJS wrapper for the browser</li>
+        <li>jQuery CommonJS modules</li>	
+        <li>Using publicsuffix v1.0 for domain extraction</li>
+      </ul>
+    </dd>
     <dt>Version 1.1 (beta) - usability fixes</dt>
     <dd>
       Made various changes after enlightment of my friend Shingo
