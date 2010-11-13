@@ -1,10 +1,11 @@
 Except from the following list of things that came from the outside,
-this project is release in the public domain.
+this project is released in the public domain (see: http://unlicense.org/ )
 
 List of external parts:
 
-- js/jquery-1.4.2.js : (c) 2010, John Resig, Dual licensed under the MIT or GPL Version 2 licenses.
-- js/jquery.hashmask.js : (c) 2009 Arc90 Inc., BSD
-- js/jquery.sha1.js : GPL
-- js/jquery.sparkline.js : (c) Splunk, Inc, BSD
-- js/biginteger.js : (c) 2009 Matthew Crumley, MIT
+- lib/biginteger.js : (c) 2009 Matthew Crumley, MIT
+- lib/jquery.js : (c) 2010, John Resig, Dual licensed under the MIT or GPL Version 2 licenses.
+- lib/jquery/hashmask.js : (c) 2009 Arc90 Inc., BSD
+- lib/jquery/sparklite.js : (c) Splunk, Inc, BSD
+- lib/sha1.js : GPL
+

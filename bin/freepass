@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+var sys = require('sys'),
+  fp = require('freepass'),
+  ARGV = process.ARGV;
+
+// TODO: get args
+// TODO: encode
+// TODO: propose domain extraction
+// TODO: get password trough readline
+
+sys.puts(fp.encode(ARGV[2], ARGV[3]));

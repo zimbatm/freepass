@@ -1,0 +1,71 @@
+#!/usr/bin/ruby
+#
+# A little tool that build the manifest of a given html file
+#
+# TODO: handle more resources
+
+errors = []
+
+begin
+	require 'rubygems'
+rescue LoadError
+	$stderr.puts '* rubygems not installed'
+end
+
+begin
+	require 'nokogiri'
+rescue LoadError
+	$stderr.puts 'ERROR: missing nokogiri gem'
+	exit 1
+end
+
+def usage()
+  $stderr.puts "usage: #{File.basename($0)} <SOURCE_HTML>"
+  exit 1
+end
+
+if !ARGV[0]
+  usage()
+end
+
+SRC = ARGV[0]
+SRC_DIR = File.dirname(SRC)
+MAN = File.join(SRC_DIR, File.basename(SRC, '.html') + '.manifest')
+
+if !File.file? SRC
+  $stderr.puts "* Source file #{SRC} not readable"
+  exit 1
+end
+
+doc = Nokogiri::HTML(File.open(SRC)){ |config| config.strict }
+
+file_list = [File.basename(SRC)]
+
+doc.css('link[rel="stylesheet"]').each do |link|
+  file_list.push link['href']
+end
+
+doc.css('script[src]').each do |script|
+  file_list.push script['src']
+end
+
+# TODO: add more resources here
+
+doc.at_css('html')['manifest'] = File.basename(MAN)
+
+##
+## Create manifest file
+##
+File.open(MAN, 'w') do |f|
+  f.puts "CACHE MANIFEST"
+  file_list.each do |path|
+    f.puts path
+  end
+end
+
+##
+## Update HTML
+##
+File.open(SRC, 'w') do |f|
+  f.write doc.to_html
+end
