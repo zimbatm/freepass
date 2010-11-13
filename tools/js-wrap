@@ -29,7 +29,7 @@ JS_TEMPLATE = <<TEMPLATE
   };
   
   function require(id) {
-    id = id.replace(/^\.\//, '');
+    id = id.replace(/^\\.\\//, '');
     //FIXME: relative paths
     if (!(id in exports)) {
       throw "Unknown module '" + id + "'";
