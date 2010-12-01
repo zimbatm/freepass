@@ -1,6 +1,6 @@
 
 
-task :default => :build
+task :default => :dev
 
 #### Global directives ####
 
