@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 # One file to rule them all
 #
 # A little tool that joins JavaScript resources and CSS resources into the HTML
