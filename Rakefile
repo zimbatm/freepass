@@ -44,12 +44,13 @@ file "_build/freepass.js" => ["lib/biginteger.js", "lib/freepass.js", "lib/freep
   # TODO: use node to resolve the dependencies
   deps << PUBLICSUFFIX_LIB + '/publicsuffix.js'
   deps << PUBLICSUFFIX_LIB + '/publicsuffix-list.js'
-  
+
+  mkdir_p "_build"
   sh "tools/js-wrap", t.name, 'freepass/gui', *deps
 end
 
 file "_build/freepass.min.js" => "_build/freepass.js" do |t|
-  sh "tools/js-min", t.prerequisites.first, t.name
+  sh "tools/js-min", "-e", "yui", t.prerequisites.first, t.name
 end
 
 file "_build/freepass.css" => "src/freepass.css" do
@@ -77,7 +78,6 @@ end
 file "_build/freepass.bundle.html" => ["_build/freepass.html", "_build/freepass.js", "_build/freepass.css"] do |t| 
   # One file to rule them all
   sh "tools/html-bundle", t.prerequisites.first, t.name
-  sh "tools/html-manifest #{t.name}"
 end
 
 file "_build/freepass.min.bundle.html" => "_build/freepass.min.html" do |t|
