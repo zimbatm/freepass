@@ -5,7 +5,7 @@ task :default => :build
 #### Global directives ####
 
 desc "Development build"
-task :build => ["_build/freepass.html", "_build/freepass.css", "_build/freepass.js", "_build/bookmarklet.min.js"]
+task :build => ["_build/freepass.html", "_build/freepass.css", "_build/freepass.js"]
 
 desc "Minification"
 task :min => ["_build/freepass.min.js", "_build/freepass.min.css", "_build/freepass.min.html"]
@@ -23,14 +23,6 @@ PUBLICSUFFIX_LIB=File.expand_path('../publicsuffix.js/lib')
 #### File tasks ####
 
 directory "_build"
-
-file "_build/bookmarklet.js" => "src/bookmarklet.js" do |t|
-  cp t.prerequisites.first, t.name
-end
-
-file "_build/bookmarklet.min.js" => "_build/bookmarklet.js" do |t|
-  sh "tools/js-min", t.prerequisites.first, t.name
-end
 
 # Build one big file with all commonjs deps in a wrapper
 # TODO: resolve dependencies with static analysis
@@ -60,7 +52,7 @@ file "_build/freepass.min.css" => "_build/freepass.css" do |t|
   sh "tools/css-min", t.prerequisites.first, t.name
 end
 
-file "_build/freepass.html" => ["_build", "src/freepass.html", "_build/freepass.js", "_build/freepass.css", "_build/bookmarklet.min.js"] do
+file "_build/freepass.html" => ["_build", "src/freepass.html", "_build/freepass.js", "_build/freepass.css"] do
   cp "src/freepass.html", "_build/freepass.html"
 end
 
@@ -74,7 +66,7 @@ end
 
 # TODO: resolve dependencies with static analysis
 # TODO: should include the bookmarklet
-file "_build/freepass.bundle.html" => ["_build/freepass.html", "_build/freepass.js", "_build/freepass.css", "_build/bookmarklet.min.js"] do |t| 
+file "_build/freepass.bundle.html" => ["_build/freepass.html", "_build/freepass.js", "_build/freepass.css"] do |t| 
   # One file to rule them all
   sh "tools/html-bundle", t.prerequisites.first, t.name
   sh "tools/html-manifest #{t.name}"
