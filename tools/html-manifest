@@ -6,6 +6,8 @@
 
 errors = []
 
+require 'digest/md5'
+
 begin
   require 'rubygems'
 rescue LoadError
@@ -52,6 +54,18 @@ end
 # TODO: add more resources here
 
 doc.at_css('html')['manifest'] = File.basename(MAN)
+
+##
+## Create a unique ID for the manifest file
+##
+sum = ""
+Dir.chdir(SRC_DIR) do
+  file_list.each do |path|
+    sum += Digest::MD5.digest(File.read(path))
+  end
+end
+sum = Digest::MD5.hexdigest(sum)
+file_list.push("##{sum}")
 
 ##
 ## Create manifest file
