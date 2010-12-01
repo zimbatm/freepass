@@ -4,9 +4,6 @@ task :default => :build
 
 #### Global directives ####
 
-desc "Development build"
-task :build => ["_build/freepass.html", "_build/freepass.css", "_build/freepass.js"]
-
 desc "Minification"
 task :min => ["_build/freepass.min.js", "_build/freepass.min.css", "_build/freepass.min.html"]
 
@@ -16,6 +13,12 @@ task :bundle => "_build/freepass.bundle.html"
 desc "Minify, then bundle"
 task "min+bundle" => "_build/freepass.min.bundle.html"
 
+desc "Development build"
+task :dev => ["_build/freepass.html", "_build/freepass.css", "_build/freepass.js"]
+
+desc "Generate index file with manifest"
+task "release" => "_build/index.html"
+
 #### Constants ####
 
 PUBLICSUFFIX_LIB=File.expand_path('../publicsuffix.js/lib')
@@ -23,6 +26,11 @@ PUBLICSUFFIX_LIB=File.expand_path('../publicsuffix.js/lib')
 #### File tasks ####
 
 directory "_build"
+
+file "_build/index.html" => "_build/freepass.min.bundle.html" do
+  cp "_build/freepass.min.bundle.html", "_build/index.html"
+  sh "tools/html-manifest", "_build/index.html"
+end
 
 # Build one big file with all commonjs deps in a wrapper
 # TODO: resolve dependencies with static analysis
