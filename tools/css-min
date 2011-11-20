@@ -13,7 +13,7 @@ rescue LoadError
 end
 
 require 'yui/compressor'
-compressor = YUI::CssCompressor.new
+compressor = YUI::CssCompressor.new(:line_break=>80)
 out = compressor.compress File.read(ARGV[0])
 File.open(ARGV[1], 'w') do |f|
   f.write out

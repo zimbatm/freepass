@@ -78,7 +78,7 @@ end
 
 add_engine('yui') do |input, output|
   require 'yui/compressor'
-  compressor = YUI::JavaScriptCompressor.new(:munge => true)
+  compressor = YUI::JavaScriptCompressor.new(:munge => true, :line_break=>80)
   output.write compressor.compress(input.read)
 end
 
