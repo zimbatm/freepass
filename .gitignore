@@ -1,3 +1,4 @@
 *.esproj
 *.kpf
 _build/
+Gemfile.lock
