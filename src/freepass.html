@@ -10,22 +10,24 @@
   <h1 id="title">FreePass 2.0 (beta)</h1>
   <form id="freepass">
     <div class="front">
-      <input class="masterpw" type="password" autofocus placeholder="your password" title="master password">
-      
-      <label for="domain" class="domain-label">and</label>
-      
-      <div class="domain-wrap">
-        <div class="domain-mask"><span class="prefix"></span><span class="main"></span><span class="postfix"></span></div>
-        <input class="domain" type="text" autocomplete="off" title="domain">
-      </div>
-    
-      <input type="checkbox" class="subdomain" title="extract domain" checked>
-      
-      <button type="submit">gives</button>
-      
-      <input type="text" class="result" autocomplete="off" readonly placeholder="site password">
+      <div>
+        <input class="masterpw" type="password" autofocus placeholder="your password" title="master password">
+        
+        <label for="domain" class="domain-label">and</label>
+        
+        <div class="domain-wrap">
+          <div class="domain-mask"><span class="prefix"></span><span class="main"></span><span class="postfix"></span></div>
+          <input class="domain" type="text" autocomplete="off" title="domain">
+        </div>
 
-      <button class="info" title="info">i</button>
+        <input type="checkbox" class="subdomain" title="extract domain" checked>
+        
+        <button type="submit">gives</button>
+        
+        <input type="text" class="result" autocomplete="off" readonly placeholder="site password">
+
+        <button class="info" title="info">i</button>
+      </div>
     </div>
     <div class="back">
       FreePass gives you a unique password per website by combining the domain and a master password.

@@ -33,7 +33,9 @@ p {
 #freepass {
   position: relative;
   width: 100%;
-  height: 14em;
+
+  font-size: 1.5em;
+  height: 9.25em;
   margin-bottom: 4em;
 
   -webkit-perspective: 600;
@@ -43,7 +45,6 @@ p {
 #freepass > div {
   background-color: #bdbdbd;
   padding: 1em;
-  padding-right: 2em;
   border: 1px solid #ccc;
   float: none;
   position: absolute;
@@ -52,11 +53,14 @@ p {
   width: inherit;
   height: inherit;
 
-  font-size: 1.5em;
   text-align: center;
 
   text-shadow: 1px  1px 1px rgba(0,0,0,0.6);
   border-radius: 0.5em;
+}
+
+#freepass .front > div {
+  margin-right: 1em;
 }
 
 #freepass input {
