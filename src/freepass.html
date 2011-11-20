@@ -7,28 +7,32 @@
   <script src="freepass.js"></script>
 </head>
 <body>
+  <h1 id="title">FreePass 2.0 (beta)</h1>
   <form id="freepass">
-    <h1>FreePass 2.0 (beta)</h1>
-    <label for="masterpw">master password</label>
-    <input id="masterpw" type="password" autofocus placeholder="your password">
+    <div class="front">
+      <input class="masterpw" type="password" autofocus placeholder="your password" title="master password">
+      
+      <label for="domain" class="domain-label">and</label>
+      
+      <div class="domain-wrap">
+        <div class="domain-mask"><span class="prefix"></span><span class="main"></span><span class="postfix"></span></div>
+        <input class="domain" type="text" autocomplete="off" title="domain">
+      </div>
     
-    <label for="domain" id="domain-label">domain</label>
-    
-    <div id="domain-wrap">
-      <div id="domain-mask"><span class="prefix"></span><span class="main"></span><span class="postfix"></span></div>
-      <input id="domain" type="text" autocomplete="off">
-    </div>
-  
-    <input type="checkbox" id="subdomain" label="only domain" checked>
-    
-    <button type="submit">make result</button>
-    
-    <input type="text" id="result" autocomplete="off" readonly placeholder="site password">
-  </form>
-  
-  <a id="bookmarklet" href="javascript:(function(d){var x=d.createElement('iframe');x.src='http://freepass.li';x.style.cssText='width:180px;height:110px;position:absolute;border:5px solid #fff;margin:0;padding:0;top:0;right:0;z-index:99999;';d.body.appendChild(x);})(document);">FreePass</a>
+      <input type="checkbox" class="subdomain" title="extract domain" checked>
+      
+      <button type="submit">gives</button>
+      
+      <input type="text" class="result" autocomplete="off" readonly placeholder="site password">
 
-  <p id="about">FreePass allows you to cut down on the number of passwords you use on the web</p>
+      <button class="info" title="info">i</button>
+    </div>
+    <div class="back">
+      FreePass gives you a unique password per website by combining the domain and a master password.
+
+      Use the <a id="bookmarklet" href="javascript:(function(d){var x=d.createElement('iframe');x.src='http://freepass.li';x.style.cssText='width:180px;height:110px;position:absolute;border:5px solid #fff;margin:0;padding:0;top:0;right:0;z-index:99999;';d.body.appendChild(x);})(document);">FreePass</a> bookmarklet to simplify the process.
+    </div>
+  </form>
 
   <p id="debug"></p>
 
